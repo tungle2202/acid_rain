@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:vi": "vite --mode vi",
+    "dev:en": "vite --mode en",
     "build": "vite build",
+    "build:vi": "vite build --mode vi",
+    "build:en": "vite build --mode en",
     "preview": "vite preview",
     "tauri": "tauri"
   },

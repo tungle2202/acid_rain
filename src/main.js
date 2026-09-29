@@ -1,4 +1,5 @@
 import "./style.css";
+import { initI18n, t } from "./i18n.js";
 import { chemistryEngine, MOLECULES } from "./chemistry.js";
 import {
   Fish,
@@ -164,13 +165,13 @@ function updateEcologyMetrics() {
   if (phEl) phEl.textContent = rPh;
   if (phStatus) {
     if (state.rainPh < 4.1) {
-      phStatus.textContent = "Acid Apocalypse (Trees Dying)";
+      phStatus.textContent = t("metrics_status.rain_apocalypse");
       phStatus.className = "metric-status danger-text";
     } else if (state.rainPh < 5.0) {
-      phStatus.textContent = "Severe Acid Rain";
+      phStatus.textContent = t("metrics_status.rain_severe");
       phStatus.className = "metric-status danger-text";
     } else {
-      phStatus.textContent = "Normal / Clean";
+      phStatus.textContent = t("metrics_status.rain_normal");
       phStatus.className = "metric-status";
     }
   }
@@ -180,13 +181,13 @@ function updateEcologyMetrics() {
   if (lakeEl) lakeEl.textContent = lPh;
   if (lakeStatus) {
     if (state.lakePh < 4.8) {
-      lakeStatus.textContent = "Fish Mortality (Dead Skeletons)";
+      lakeStatus.textContent = t("metrics_status.lake_mortality");
       lakeStatus.className = "metric-status danger-text";
     } else if (state.lakePh < 5.8) {
-      lakeStatus.textContent = "Acid Stress (Low Population)";
+      lakeStatus.textContent = t("metrics_status.lake_stress");
       lakeStatus.className = "metric-status text-danger";
     } else {
-      lakeStatus.textContent = "Thriving Habitat";
+      lakeStatus.textContent = t("metrics_status.lake_thriving");
       lakeStatus.className = "metric-status";
     }
   }
@@ -197,7 +198,12 @@ function updateEcologyMetrics() {
     const health = state.rainPh < 4.1 ? 0 : Math.max(25, Math.floor(100 - (emissionSum / 100) * 55));
     treeEl.textContent = `${health}%`;
     if (treeStatus) {
-      treeStatus.textContent = state.rainPh < 4.1 ? "Defoliated & Dead" : state.rainPh < 5.0 ? "Chlorosis Stress" : "Healthy Foliage";
+      treeStatus.textContent =
+        state.rainPh < 4.1
+          ? t("metrics_status.tree_dead")
+          : state.rainPh < 5.0
+          ? t("metrics_status.tree_chlorosis")
+          : t("metrics_status.tree_healthy");
       treeStatus.className = state.rainPh < 4.1 ? "metric-status danger-text" : "metric-status";
     }
   }
@@ -649,12 +655,13 @@ function triggerKillFeed(result) {
   const isAcid = result.product === "H2SO4" || result.product === "HNO3";
   card.className = `kf-entry ${isAcid ? "legendary" : ""}`;
 
+  const tagText = isAcid ? t("kill_feed.acid_formed") : t("kill_feed.oxidized");
   card.innerHTML = `
     <div class="kf-main-row">
       <span class="kf-reactants">${result.advancement.reaction.reactants.join(" + ")}</span>
       <span class="kf-symbol">⚡➔</span>
       <span class="kf-product">${result.product}</span>
-      <span class="kf-tag ${isAcid ? "acid" : ""}">${isAcid ? "ACID FORMED" : "OXIDIZED"}</span>
+      <span class="kf-tag ${isAcid ? "acid" : ""}">${tagText}</span>
     </div>
     <div class="kf-title">${result.advancement.title} (${result.advancement.reaction.equation})</div>
   `;
@@ -767,13 +774,13 @@ function updateProductivity(val) {
 
   if (smokeDensityText) {
     if (state.productivity < 35) {
-      smokeDensityText.textContent = "Light Gray Vapor";
+      smokeDensityText.textContent = t("metrics_status.smoke_light");
       smokeDensityText.className = "val";
     } else if (state.productivity < 70) {
-      smokeDensityText.textContent = "Moderate Smog";
+      smokeDensityText.textContent = t("metrics_status.smoke_moderate");
       smokeDensityText.className = "val";
     } else {
-      smokeDensityText.textContent = "Dense Pitch-Black Soot";
+      smokeDensityText.textContent = t("metrics_status.smoke_dense");
       smokeDensityText.className = "val text-danger";
     }
   }
@@ -841,9 +848,15 @@ function renderAdvancementTree() {
   const nodes = chemistryEngine.advancements;
   const progress = chemistryEngine.getProgress();
 
-  if (mcXpLevel) mcXpLevel.textContent = `LVL ${progress.completed}`;
+  if (mcXpLevel) mcXpLevel.textContent = t("tech_tree_modal.level", { level: progress.completed });
   if (mcXpFill) mcXpFill.style.width = `${progress.percent}%`;
-  if (mcXpText) mcXpText.textContent = `${progress.completed} / ${progress.total} Advancements (${progress.percent}%)`;
+  if (mcXpText) {
+    mcXpText.textContent = t("tech_tree_modal.progress", {
+      completed: progress.completed,
+      total: progress.total,
+      percent: progress.percent,
+    });
+  }
 
   for (const n of nodes) {
     const isUnlocked = n.unlocked;
@@ -852,15 +865,18 @@ function renderAdvancementTree() {
     const nodeEl = document.createElement("div");
     nodeEl.className = `mc-node ${isUnlocked ? "unlocked" : "locked"} ${isLegendary ? "legendary" : ""}`;
 
+    const badgeText = isUnlocked ? t("tech_tree_modal.badge_done") : t("tech_tree_modal.badge_locked");
+    const descText = isUnlocked ? n.desc : t("tech_tree_modal.locked_desc");
+
     nodeEl.innerHTML = `
       <div class="mc-frame-box">${isUnlocked ? n.icon : "🔒"}</div>
       <div class="mc-node-info">
         <div class="mc-node-header">
           <span class="mc-node-title">${n.title}</span>
-          <span class="mc-badge ${isUnlocked ? "done" : "lock"}">${isUnlocked ? "DONE" : "LOCKED"}</span>
+          <span class="mc-badge ${isUnlocked ? "done" : "lock"}">${badgeText}</span>
         </div>
         <span class="mc-node-sub">${n.subtitle}</span>
-        <p class="mc-node-desc">${isUnlocked ? n.desc : "??? Hidden reaction chain. Drag molecules in smoke POV to discover!"}</p>
+        <p class="mc-node-desc">${descText}</p>
       </div>
     `;
 
@@ -910,6 +926,7 @@ if (noxInput) {
 }
 
 // Initial setup
+initI18n();
 updateProductivity(70);
 updateEcologyMetrics();
 renderAdvancementTree();
