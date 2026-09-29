@@ -2,7 +2,7 @@ export default {
   app: {
     title: "Acid Rain Environmental Simulation",
     window_title: "Acid Rain",
-    version: "v0.1.0",
+    version: "v0.2.0",
   },
   dock: {
     advancement_tree: "Advancement Tree",

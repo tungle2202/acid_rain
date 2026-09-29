@@ -2,7 +2,7 @@ export default {
   app: {
     title: "Mô Phỏng Môi Trường Mưa Axit",
     window_title: "Mô Phỏng Mưa Axit",
-    version: "v0.1.0",
+    version: "v0.2.0",
   },
   dock: {
     advancement_tree: "Cây Tiến Trình",
