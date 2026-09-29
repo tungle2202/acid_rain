@@ -373,16 +373,6 @@ export const MOLECULES = {
 // REACTION DISCOVERY REGISTRY & ADVANCEMENT TREE
 // ========================================================
 export const ADVANCEMENT_NODES = [
-  {
-    id: "root_emissions",
-    title: "{{chemistry.advancements.root_emissions.title}}",
-    subtitle: "{{chemistry.advancements.root_emissions.subtitle}}",
-    desc: "{{chemistry.advancements.root_emissions.desc}}",
-    tier: "root",
-    icon: "🌋",
-    parent: null,
-    unlocked: true,
-  },
   // Sulfur branch
   {
     id: "so3_oxidation",
@@ -477,22 +467,6 @@ export const ADVANCEMENT_NODES = [
     },
     unlocked: false,
   },
-  {
-    id: "fe_rust",
-    title: "{{chemistry.advancements.fe_rust.title}}",
-    subtitle: "4Fe + 3O₂ ➔ 2Fe₂O₃",
-    desc: "{{chemistry.advancements.fe_rust.desc}}",
-    tier: "rare",
-    icon: "🍂",
-    parent: "root_emissions",
-    reaction: {
-      reactants: ["Fe", "O2"],
-      product: "Fe2O3",
-      equation: "4Fe + 3O₂ ➔ 2Fe₂O₃",
-    },
-    unlocked: false,
-  },
-
   // Stone Monument Dissolution branch (Moai Statue)
   {
     id: "caco3_acid_dissolution",
