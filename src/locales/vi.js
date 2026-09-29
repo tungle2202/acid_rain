@@ -1,0 +1,146 @@
+export default {
+  app: {
+    title: "Mô Phỏng Môi Trường Mưa Axit",
+    window_title: "Mô Phỏng Mưa Axit",
+    version: "v0.1.0",
+  },
+  dock: {
+    advancement_tree: "Cây Tiến Trình",
+    advancement_tree_title: "Xem Cây Phản Ứng Dạng Minecraft",
+  },
+  research_bar: {
+    back_to_env: "⬅ Quay Lại Môi Trường",
+    back_to_env_title: "Quay Lại Môi Trường (Esc)",
+    title: "Hóa Học Khí Quyển",
+    add_molecule: "Thêm Phân Tử:",
+    reset_field: "Đặt Lại",
+  },
+  factory_panel: {
+    title: "Nhà Máy Nhiệt Điện Than",
+    sub_label: "Trạm Phát Thải Công Nghiệp",
+    close_title: "Đóng Bảng (Esc)",
+    work_productivity: "Năng Suất Hoạt Động",
+    productivity_idle: "10% Nghỉ",
+    productivity_mid: "50%",
+    productivity_max: "100% Tối Đa",
+    preset_eco: "Tiết Kiệm (25%)",
+    preset_standard: "Tiêu Chuẩn (60%)",
+    preset_overdrive: "Quá Tải (100%)",
+    stack_emissions_title: "Chỉ Số Phát Thải Thời Gian Thực",
+    smoke_density_label: "Mật Độ Khói:",
+    so2_rate_label: "Tốc Độ Thải SO₂:",
+    nox_rate_label: "Tốc Độ Thải NOₓ:",
+    thermal_output_label: "Công Suất Nhiệt:",
+  },
+  tech_tree_modal: {
+    title: "CÂY CÔNG NGHỆ KHÍ QUYỂN",
+    level: "CẤP {level}",
+    level_prefix: "CẤP",
+    close_title: "Đóng (Esc)",
+    progress: "{completed} / {total} Tiến Trình ({percent}%)",
+    badge_done: "HOÀN THÀNH",
+    badge_locked: "CHƯA MỞ",
+    locked_desc: "??? Chuỗi phản ứng ẩn. Kéo thả phân tử trong làn khói để khám phá!",
+  },
+  control_panel: {
+    title: "Mô Phỏng Mưa Axit",
+    status_header: "Trạng Thái Mô Phỏng",
+    status_active: "Khí Quyển Đang Chạy (60 FPS)",
+    controls_header: "Điều Khiển Môi Trường",
+    rain_intensity: "Cường Độ Lượng Mưa",
+    so2_emissions: "Lượng Khí Thải SO₂",
+    nox_emissions: "Lượng Khí Thải NOₓ",
+    indicators_header: "Chỉ Số Sinh Thái",
+    precipitation_ph: "pH Nước Mưa",
+    lake_acidity: "Độ Axit Của Hồ",
+    soil_quality: "Chất Lượng Đất",
+    foliage_health: "Sức Sống Của Cây",
+  },
+  metrics_status: {
+    rain_apocalypse: "Thảm Họa Axit (Chết cây)",
+    rain_severe: "Mưa Axit Nghiêm Trọng",
+    rain_normal: "Bình Thường / Trong Lành",
+    lake_mortality: "Cá Chết Hàng Loạt",
+    lake_stress: "Stress Axit (Suy Giảm Số Lượng)",
+    lake_thriving: "Môi Trường Lý Tưởng",
+    soil_leaching: "Rửa Trôi Dinh Dưỡng",
+    tree_dead: "Rụng Lá & Chết Khô",
+    tree_chlorosis: "Ức Chế Diệp Lục",
+    tree_healthy: "Tươi Tốt Khỏe Mạnh",
+    smoke_light: "Hơi Xám Nhạt",
+    smoke_moderate: "Khói Mù Vừa Phải",
+    smoke_dense: "Muội Than Đen Đặc",
+  },
+  kill_feed: {
+    acid_formed: "TẠO THÀNH AXIT",
+    oxidized: "ĐÃ OXI HÓA",
+  },
+  chemistry: {
+    default_no_reaction: "Không có phản ứng tự phát giữa các phân tử này. Hãy thử kết hợp một oxit với O₂ hoặc H₂O!",
+    molecules: {
+      SO2: {
+        name: "Lưu huỳnh Đioxit",
+        desc: "Khí độc gây ngạt sinh ra từ quá trình đốt than và núi lửa phun trào.",
+      },
+      O2: {
+        name: "Oxi Khí Quyển",
+        desc: "Khí thiết yếu tham gia oxi hóa quang hóa các chất ô nhiễm thành axit.",
+      },
+      H2O: {
+        name: "Hơi Nước",
+        desc: "Độ ẩm khí quyển hydrat hóa các oxit lơ lửng thành giọt axit lỏng.",
+      },
+      SO3: {
+        name: "Lưu huỳnh Trioxit",
+        desc: "Chất trung gian anhydrit hoạt tính cực cao; phản ứng tức thì với hơi ẩm đám mây.",
+      },
+      NO: {
+        name: "Nitơ Monoxit",
+        desc: "Oxit nitơ sơ cấp sinh ra từ sấm sét, lò đốt công nghiệp và nhiệt độ núi lửa.",
+      },
+      NO2: {
+        name: "Nitơ Đioxit",
+        desc: "Khí màu nâu đỏ có mùi hắc đặc trưng, tác nhân chính gây khói mù đô thị và núi lửa.",
+      },
+      H2SO4: {
+        name: "Axit Sunfuric",
+        desc: "Vua của các loại axit. Axit vô cơ cực mạnh ăn mòn tàn phá hệ sinh thái thủy sinh và rừng cây.",
+      },
+      HNO3: {
+        name: "Axit Nitric",
+        desc: "Axit ăn mòn mạnh làm rửa trôi magiê và canxi khỏi lá cây, gây nhiễm độc thổ nhưỡng.",
+      },
+      H2SO3: {
+        name: "Axit Sunfurơ",
+        desc: "Sản phẩm hòa tan trực tiếp của khí lưu huỳnh thô vào các giọt nước mưa rơi xuống.",
+      },
+    },
+    advancements: {
+      root_emissions: {
+        title: "Nguồn Phát Thải Nặng",
+        subtitle: "Cội Nguồn Ô Nhiễm",
+        desc: "Nhà máy nhiệt điện than và núi lửa xả lượng khổng lồ khí SO₂ và NO vào bầu trời.",
+      },
+      so3_oxidation: {
+        title: "Oxi Hóa Trong Không Khí",
+        desc: "Oxi hóa lưu huỳnh đioxit trong khí quyển để tạo thành lưu huỳnh trioxit hoạt tính cao.",
+      },
+      h2so3_formation: {
+        title: "Cơn Mưa Sunfurơ",
+        desc: "Khói lưu huỳnh thô hòa tan trực tiếp vào hạt mưa, khởi phát tác hại axit ban đầu.",
+      },
+      h2so4_master: {
+        title: "Vua Ăn Mòn (H₂SO₄)",
+        desc: "Tổng hợp thành công Axit Sunfuric! Tác nhân hủy diệt hàng đầu trong hiện tượng mưa axit nghiêm trọng.",
+      },
+      no2_oxidation: {
+        title: "Bùng Phát Khói Nâu",
+        desc: "Nitơ monoxit nhanh chóng bị oxi hóa trong không khí, tạo ra khói mù nitơ đioxit màu nâu đỏ.",
+      },
+      hno3_master: {
+        title: "Thảm Họa Axit Nitric (HNO₃)",
+        desc: "Tổng hợp thành công Axit Nitric! Cơn mưa nitrat độc hại hòa tan chất dinh dưỡng trong đất và làm hỏng mang cá.",
+      },
+    },
+  },
+};

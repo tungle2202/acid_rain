@@ -1,0 +1,146 @@
+export default {
+  app: {
+    title: "Acid Rain Environmental Simulation",
+    window_title: "Acid Rain",
+    version: "v0.1.0",
+  },
+  dock: {
+    advancement_tree: "Advancement Tree",
+    advancement_tree_title: "View Minecraft-Style Reaction Tech Tree",
+  },
+  research_bar: {
+    back_to_env: "⬅ Return to Environment",
+    back_to_env_title: "Return to Landscape (Esc)",
+    title: "Atmospheric Chemistry",
+    add_molecule: "Add Molecule:",
+    reset_field: "Reset Field",
+  },
+  factory_panel: {
+    title: "Coal Power Plant",
+    sub_label: "Industrial Emission Station",
+    close_title: "Close Panel (Esc)",
+    work_productivity: "Work Productivity",
+    productivity_idle: "10% Idle",
+    productivity_mid: "50%",
+    productivity_max: "100% Max",
+    preset_eco: "Eco (25%)",
+    preset_standard: "Standard (60%)",
+    preset_overdrive: "Overdrive (100%)",
+    stack_emissions_title: "Real-Time Stack Emissions",
+    smoke_density_label: "Smoke Density:",
+    so2_rate_label: "SO₂ Output Rate:",
+    nox_rate_label: "NOₓ Output Rate:",
+    thermal_output_label: "Thermal Output:",
+  },
+  tech_tree_modal: {
+    title: "TROPOSPHERIC TECH TREE",
+    level: "LVL {level}",
+    level_prefix: "LVL",
+    close_title: "Close (Esc)",
+    progress: "{completed} / {total} Advancements ({percent}%)",
+    badge_done: "DONE",
+    badge_locked: "LOCKED",
+    locked_desc: "??? Hidden reaction chain. Drag molecules in smoke POV to discover!",
+  },
+  control_panel: {
+    title: "Acid Rain Sim",
+    status_header: "Simulation Status",
+    status_active: "Atmosphere Active (60 FPS)",
+    controls_header: "Environment Controls",
+    rain_intensity: "Rainfall Intensity",
+    so2_emissions: "SO₂ Emissions",
+    nox_emissions: "NOₓ Emissions",
+    indicators_header: "Ecological Indicators",
+    precipitation_ph: "Precipitation pH",
+    lake_acidity: "Lake Acidity",
+    soil_quality: "Soil Quality",
+    foliage_health: "Foliage Health",
+  },
+  metrics_status: {
+    rain_apocalypse: "Acid Apocalypse (Trees Dying)",
+    rain_severe: "Severe Acid Rain",
+    rain_normal: "Normal / Clean",
+    lake_mortality: "Fish Mortality (Dead Skeletons)",
+    lake_stress: "Acid Stress (Low Population)",
+    lake_thriving: "Thriving Habitat",
+    soil_leaching: "Nutrient Leaching",
+    tree_dead: "Defoliated & Dead",
+    tree_chlorosis: "Chlorosis Stress",
+    tree_healthy: "Healthy Foliage",
+    smoke_light: "Light Gray Vapor",
+    smoke_moderate: "Moderate Smog",
+    smoke_dense: "Dense Pitch-Black Soot",
+  },
+  kill_feed: {
+    acid_formed: "ACID FORMED",
+    oxidized: "OXIDIZED",
+  },
+  chemistry: {
+    default_no_reaction: "No spontaneous reaction between these molecules. Try combining an oxide with O₂ or H₂O!",
+    molecules: {
+      SO2: {
+        name: "Sulfur Dioxide",
+        desc: "Toxic choking gas from coal combustion and volcanic eruptions.",
+      },
+      O2: {
+        name: "Atmospheric Oxygen",
+        desc: "Essential gas that photochemically oxidizes pollutants into acids.",
+      },
+      H2O: {
+        name: "Water Vapor",
+        desc: "Atmospheric humidity that hydrates airborne oxides into liquid acids.",
+      },
+      SO3: {
+        name: "Sulfur Trioxide",
+        desc: "Aggressive anhydride intermediate; instantaneously reacts with cloud moisture.",
+      },
+      NO: {
+        name: "Nitric Oxide",
+        desc: "Primary nitrogen oxide generated from lightning, furnaces, and volcanic heat.",
+      },
+      NO2: {
+        name: "Nitrogen Dioxide",
+        desc: "Pungent reddish-brown gas creating heavy urban and volcanic smog.",
+      },
+      H2SO4: {
+        name: "Sulfuric Acid",
+        desc: "King of Acids. Highly corrosive strong mineral acid that decimates aquatic and forest ecosystems.",
+      },
+      HNO3: {
+        name: "Nitric Acid",
+        desc: "Corrosive acid that strips tree leaves of magnesium and calcium, poisoning soil.",
+      },
+      H2SO3: {
+        name: "Sulfurous Acid",
+        desc: "Direct dissolution product of raw sulfur smoke into falling rainwater droplets.",
+      },
+    },
+    advancements: {
+      root_emissions: {
+        title: "Heavy Emitters",
+        subtitle: "Root of Pollution",
+        desc: "Coal plants & volcanoes expel massive volumes of SO₂ and NO into the sky.",
+      },
+      so3_oxidation: {
+        title: "Airborne Oxidation",
+        desc: "Oxidize sulfur dioxide in the atmosphere to produce reactive sulfur trioxide.",
+      },
+      h2so3_formation: {
+        title: "Sulfurous Shower",
+        desc: "Raw sulfur fumes dissolve directly into raindrops, starting initial acid damage.",
+      },
+      h2so4_master: {
+        title: "King of Corrosion (H₂SO₄)",
+        desc: "Synthesize Sulfuric Acid! The paramount agent of severe environmental acid rain.",
+      },
+      no2_oxidation: {
+        title: "Brown Smog Bloom",
+        desc: "Nitric oxide oxidizes rapidly in fresh air, generating reddish nitrogen dioxide smog.",
+      },
+      hno3_master: {
+        title: "Nitric Catastrophe (HNO₃)",
+        desc: "Synthesize Nitric Acid! Toxic nitrate deluge that dissolves soil nutrients and fish gills.",
+      },
+    },
+  },
+};

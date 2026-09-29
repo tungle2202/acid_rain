@@ -4,16 +4,18 @@
  * - 2D geometric ball-and-stick structures for atmospheric molecules
  * - Reaction discovery rules & synthesis logic
  * - Minecraft-style Advancement/Tech Tree data
+ * 
+ * NOTE: Text fields contain placeholders waiting to be hydrated by the active language script.
  */
 
 export const MOLECULES = {
   SO2: {
     id: "SO2",
     formula: "SO₂",
-    name: "Sulfur Dioxide",
+    name: "{{chemistry.molecules.SO2.name}}",
     color: "#f59e0b",
     type: "pollutant",
-    desc: "Toxic choking gas from coal combustion and volcanic eruptions.",
+    desc: "{{chemistry.molecules.SO2.desc}}",
     // Bent geometry: S at origin, 2 O at ~119°
     atoms: [
       { x: 0, y: -6, symbol: "S", color: "#f59e0b", r: 16 },
@@ -28,10 +30,10 @@ export const MOLECULES = {
   O2: {
     id: "O2",
     formula: "O₂",
-    name: "Atmospheric Oxygen",
+    name: "{{chemistry.molecules.O2.name}}",
     color: "#38bdf8",
     type: "atmospheric",
-    desc: "Essential gas that photochemically oxidizes pollutants into acids.",
+    desc: "{{chemistry.molecules.O2.desc}}",
     // Linear diatomic: 2 O atoms
     atoms: [
       { x: -14, y: 0, symbol: "O", color: "#38bdf8", r: 13 },
@@ -42,10 +44,10 @@ export const MOLECULES = {
   H2O: {
     id: "H2O",
     formula: "H₂O",
-    name: "Water Vapor",
+    name: "{{chemistry.molecules.H2O.name}}",
     color: "#60a5fa",
     type: "atmospheric",
-    desc: "Atmospheric humidity that hydrates airborne oxides into liquid acids.",
+    desc: "{{chemistry.molecules.H2O.desc}}",
     // Bent geometry: O at origin, 2 H at ~104.5°
     atoms: [
       { x: 0, y: -5, symbol: "O", color: "#3b82f6", r: 14 },
@@ -60,10 +62,10 @@ export const MOLECULES = {
   SO3: {
     id: "SO3",
     formula: "SO₃",
-    name: "Sulfur Trioxide",
+    name: "{{chemistry.molecules.SO3.name}}",
     color: "#fb923c",
     type: "intermediate",
-    desc: "Aggressive anhydride intermediate; instantaneously reacts with cloud moisture.",
+    desc: "{{chemistry.molecules.SO3.desc}}",
     // Trigonal planar: 3 O atoms around central S at 120°
     atoms: [
       { x: 0, y: 0, symbol: "S", color: "#f59e0b", r: 16 },
@@ -80,10 +82,10 @@ export const MOLECULES = {
   NO: {
     id: "NO",
     formula: "NO",
-    name: "Nitric Oxide",
+    name: "{{chemistry.molecules.NO.name}}",
     color: "#a78bfa",
     type: "pollutant",
-    desc: "Primary nitrogen oxide generated from lightning, furnaces, and volcanic heat.",
+    desc: "{{chemistry.molecules.NO.desc}}",
     // Diatomic: N - O
     atoms: [
       { x: -13, y: 0, symbol: "N", color: "#8b5cf6", r: 13 },
@@ -94,10 +96,10 @@ export const MOLECULES = {
   NO2: {
     id: "NO2",
     formula: "NO₂",
-    name: "Nitrogen Dioxide",
+    name: "{{chemistry.molecules.NO2.name}}",
     color: "#f43f5e",
     type: "intermediate",
-    desc: "Pungent reddish-brown gas creating heavy urban and volcanic smog.",
+    desc: "{{chemistry.molecules.NO2.desc}}",
     // Bent geometry: N with 2 O
     atoms: [
       { x: 0, y: -6, symbol: "N", color: "#8b5cf6", r: 14 },
@@ -112,12 +114,12 @@ export const MOLECULES = {
   H2SO4: {
     id: "H2SO4",
     formula: "H₂SO₄",
-    name: "Sulfuric Acid",
+    name: "{{chemistry.molecules.H2SO4.name}}",
     color: "#ef4444",
     type: "acid",
     pH: "2.8",
     tier: "legendary",
-    desc: "King of Acids. Highly corrosive strong mineral acid that decimates aquatic and forest ecosystems.",
+    desc: "{{chemistry.molecules.H2SO4.desc}}",
     atoms: [
       { x: 0, y: 0, symbol: "S", color: "#f59e0b", r: 16 },
       { x: 0, y: -24, symbol: "O", color: "#ef4444", r: 12 },
@@ -139,12 +141,12 @@ export const MOLECULES = {
   HNO3: {
     id: "HNO3",
     formula: "HNO₃",
-    name: "Nitric Acid",
+    name: "{{chemistry.molecules.HNO3.name}}",
     color: "#ec4899",
     type: "acid",
     pH: "3.2",
     tier: "legendary",
-    desc: "Corrosive acid that strips tree leaves of magnesium and calcium, poisoning soil.",
+    desc: "{{chemistry.molecules.HNO3.desc}}",
     atoms: [
       { x: 0, y: 0, symbol: "N", color: "#8b5cf6", r: 14 },
       { x: 0, y: -22, symbol: "O", color: "#ef4444", r: 12 },
@@ -162,12 +164,12 @@ export const MOLECULES = {
   H2SO3: {
     id: "H2SO3",
     formula: "H₂SO₃",
-    name: "Sulfurous Acid",
+    name: "{{chemistry.molecules.H2SO3.name}}",
     color: "#eab308",
     type: "acid",
     pH: "4.2",
     tier: "rare",
-    desc: "Direct dissolution product of raw sulfur smoke into falling rainwater droplets.",
+    desc: "{{chemistry.molecules.H2SO3.desc}}",
     atoms: [
       { x: 0, y: -6, symbol: "S", color: "#f59e0b", r: 15 },
       { x: 0, y: 18, symbol: "O", color: "#ef4444", r: 12 },
@@ -192,9 +194,9 @@ export const MOLECULES = {
 export const ADVANCEMENT_NODES = [
   {
     id: "root_emissions",
-    title: "Heavy Emitters",
-    subtitle: "Root of Pollution",
-    desc: "Coal plants & volcanoes expel massive volumes of SO₂ and NO into the sky.",
+    title: "{{chemistry.advancements.root_emissions.title}}",
+    subtitle: "{{chemistry.advancements.root_emissions.subtitle}}",
+    desc: "{{chemistry.advancements.root_emissions.desc}}",
     tier: "root",
     icon: "🌋",
     parent: null,
@@ -203,9 +205,9 @@ export const ADVANCEMENT_NODES = [
   // Sulfur branch
   {
     id: "so3_oxidation",
-    title: "Airborne Oxidation",
+    title: "{{chemistry.advancements.so3_oxidation.title}}",
     subtitle: "2SO₂ + O₂ ➔ 2SO₃",
-    desc: "Oxidize sulfur dioxide in the atmosphere to produce reactive sulfur trioxide.",
+    desc: "{{chemistry.advancements.so3_oxidation.desc}}",
     tier: "rare",
     icon: "🔥",
     parent: "root_emissions",
@@ -218,9 +220,9 @@ export const ADVANCEMENT_NODES = [
   },
   {
     id: "h2so3_formation",
-    title: "Sulfurous Shower",
+    title: "{{chemistry.advancements.h2so3_formation.title}}",
     subtitle: "SO₂ + H₂O ➔ H₂SO₃",
-    desc: "Raw sulfur fumes dissolve directly into raindrops, starting initial acid damage.",
+    desc: "{{chemistry.advancements.h2so3_formation.desc}}",
     tier: "rare",
     icon: "🌧️",
     parent: "root_emissions",
@@ -233,9 +235,9 @@ export const ADVANCEMENT_NODES = [
   },
   {
     id: "h2so4_master",
-    title: "King of Corrosion (H₂SO₄)",
+    title: "{{chemistry.advancements.h2so4_master.title}}",
     subtitle: "SO₃ + H₂O ➔ H₂SO₄",
-    desc: "Synthesize Sulfuric Acid! The paramount agent of severe environmental acid rain.",
+    desc: "{{chemistry.advancements.h2so4_master.desc}}",
     tier: "legendary",
     icon: "💀",
     parent: "so3_oxidation",
@@ -249,9 +251,9 @@ export const ADVANCEMENT_NODES = [
   // Nitrogen branch
   {
     id: "no2_oxidation",
-    title: "Brown Smog Bloom",
+    title: "{{chemistry.advancements.no2_oxidation.title}}",
     subtitle: "2NO + O₂ ➔ 2NO₂",
-    desc: "Nitric oxide oxidizes rapidly in fresh air, generating reddish nitrogen dioxide smog.",
+    desc: "{{chemistry.advancements.no2_oxidation.desc}}",
     tier: "rare",
     icon: "💨",
     parent: "root_emissions",
@@ -264,9 +266,9 @@ export const ADVANCEMENT_NODES = [
   },
   {
     id: "hno3_master",
-    title: "Nitric Catastrophe (HNO₃)",
+    title: "{{chemistry.advancements.hno3_master.title}}",
     subtitle: "3NO₂ + H₂O ➔ 2HNO₃ + NO",
-    desc: "Synthesize Nitric Acid! Toxic nitrate deluge that dissolves soil nutrients and fish gills.",
+    desc: "{{chemistry.advancements.hno3_master.desc}}",
     tier: "legendary",
     icon: "⚡",
     parent: "no2_oxidation",
@@ -284,6 +286,7 @@ class GamifiedChemistryEngine {
     this.advancements = JSON.parse(JSON.stringify(ADVANCEMENT_NODES));
     this.unlockedMolecules = new Set(["SO2", "O2", "H2O", "NO"]);
     this.discoveryHistory = [];
+    this.failReason = "No spontaneous reaction between these molecules. Try combining an oxide with O₂ or H₂O!";
   }
 
   getAvailableMolecules() {
@@ -324,7 +327,7 @@ class GamifiedChemistryEngine {
 
     return {
       success: false,
-      reason: "No spontaneous reaction between these molecules. Try combining an oxide with O₂ or H₂O!",
+      reason: this.failReason,
     };
   }
 
@@ -340,3 +343,45 @@ class GamifiedChemistryEngine {
 }
 
 export const chemistryEngine = new GamifiedChemistryEngine();
+
+/**
+ * Hydrate chemistry data and engine instances with the active locale translations
+ */
+export function applyChemistryLocale(localeData) {
+  if (!localeData?.chemistry) return;
+
+  if (localeData.chemistry.molecules) {
+    for (const [id, mol] of Object.entries(MOLECULES)) {
+      if (localeData.chemistry.molecules[id]) {
+        mol.name = localeData.chemistry.molecules[id].name;
+        mol.desc = localeData.chemistry.molecules[id].desc;
+      }
+    }
+  }
+
+  if (localeData.chemistry.advancements) {
+    for (const node of ADVANCEMENT_NODES) {
+      const adv = localeData.chemistry.advancements[node.id];
+      if (adv) {
+        if (adv.title) node.title = adv.title;
+        if (adv.subtitle) node.subtitle = adv.subtitle;
+        if (adv.desc) node.desc = adv.desc;
+      }
+    }
+
+    if (chemistryEngine?.advancements) {
+      for (const node of chemistryEngine.advancements) {
+        const adv = localeData.chemistry.advancements[node.id];
+        if (adv) {
+          if (adv.title) node.title = adv.title;
+          if (adv.subtitle) node.subtitle = adv.subtitle;
+          if (adv.desc) node.desc = adv.desc;
+        }
+      }
+    }
+  }
+
+  if (chemistryEngine && localeData.chemistry.default_no_reaction) {
+    chemistryEngine.failReason = localeData.chemistry.default_no_reaction;
+  }
+}

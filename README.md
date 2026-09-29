@@ -100,16 +100,46 @@ acid_rain/
 
 ## 🌐 Languages & Localization
 
-This repository provides full bilingual support:
+The application features a decoupled, scalable internationalization (i18n) architecture. The core application mechanism contains **no hardcoded original text**, only reactive placeholders waiting for language scripts from `src/locales/`:
 
-- **`main` Branch:** English (US) interface, chemical terminology, and advancement text.
-- **`language/vietnamese` Branch:** Full Vietnamese (*Tiếng Việt*) translation across UI drawers, metrics, chemical descriptions, and Minecraft advancement nodes.
+- **English (`en`):** `src/locales/en.js`
+- **Vietnamese (`vi`):** `src/locales/vi.js`
 
-To switch to Vietnamese:
+### Choosing Language Before Launching
 
-```bash
-git checkout language/vietnamese
-```
+You can select your language preference before launching the application in several convenient ways:
+
+1. **Via Configuration File (`src/config.js`):**
+   Open `src/config.js` and set the `language` property:
+   ```javascript
+   export const APP_CONFIG = {
+     language: "vi", // Set to "vi" for Vietnamese or "en" for English
+   };
+   ```
+
+2. **Via Pre-Configured NPM Scripts:**
+   ```bash
+   # Launch in Vietnamese
+   npm run dev:vi
+
+   # Launch in English
+   npm run dev:en
+   ```
+
+3. **Via Environment Variable:**
+   ```bash
+   VITE_LANGUAGE=vi npm run dev
+   ```
+
+4. **Via URL Parameter (Browser Preview):**
+   Append `?lang=vi` or `?lang=en` to the local development URL.
+
+### Scaling to New Languages
+
+To add a new language (e.g. Japanese `ja` or French `fr`):
+1. Create `src/locales/<lang>.js` by copying `src/locales/en.js` and translating the strings.
+2. Register the locale in `src/i18n.js` (`LOCALES`).
+3. Set `language: "<lang>"` in `src/config.js`.
 
 ---
 

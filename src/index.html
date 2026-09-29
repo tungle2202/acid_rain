@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Acid Rain Environmental Simulation</title>
+    <title data-i18n="app.title">{{app.title}}</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
@@ -17,29 +17,29 @@
 
         <!-- Quick Dock: Dedicated Tech Tree Button -->
         <div id="quick-dock-buttons" class="quick-dock-buttons">
-          <button id="open-tree-btn" class="dock-btn tree-dock-btn" title="View Minecraft-Style Reaction Tech Tree">
-            🏆 <span>Advancement Tree</span>
+          <button id="open-tree-btn" class="dock-btn tree-dock-btn" data-i18n-title="dock.advancement_tree_title">
+            🏆 <span data-i18n="dock.advancement_tree">{{dock.advancement_tree}}</span>
           </button>
         </div>
 
         <!-- TOP RESEARCH BAR (Visible when zoomed into smoke) -->
         <div id="research-top-bar" class="research-top-bar hidden">
           <div class="rt-left">
-            <button id="back-to-env-btn" class="rt-back-btn" title="Return to Landscape (Esc)">
-              ⬅ Return to Environment <span class="kbd">Esc</span>
+            <button id="back-to-env-btn" class="rt-back-btn" data-i18n-title="research_bar.back_to_env_title">
+              <span data-i18n="research_bar.back_to_env">{{research_bar.back_to_env}}</span> <span class="kbd">Esc</span>
             </button>
             <div class="rt-title-group">
               <span class="pulse-dot"></span>
-              <span class="rt-title">Atmospheric Chemistry</span>
+              <span class="rt-title" data-i18n="research_bar.title">{{research_bar.title}}</span>
             </div>
           </div>
           <div class="rt-spawners">
-            <span class="spawner-label">Add Molecule:</span>
+            <span class="spawner-label" data-i18n="research_bar.add_molecule">{{research_bar.add_molecule}}</span>
             <button class="spawn-btn" data-type="SO2">SO₂</button>
             <button class="spawn-btn" data-type="O2">O₂</button>
             <button class="spawn-btn" data-type="H2O">H₂O</button>
             <button class="spawn-btn" data-type="NO">NO</button>
-            <button id="reset-molecules-btn" class="spawn-btn danger">Reset Field</button>
+            <button id="reset-molecules-btn" class="spawn-btn danger" data-i18n="research_bar.reset_field">{{research_bar.reset_field}}</button>
           </div>
         </div>
 
@@ -49,51 +49,51 @@
             <div class="drawer-title-group">
               <span class="icon">🏭</span>
               <div>
-                <h2>Coal Power Plant</h2>
-                <span class="sub-label">Industrial Emission Station</span>
+                <h2 data-i18n="factory_panel.title">{{factory_panel.title}}</h2>
+                <span class="sub-label" data-i18n="factory_panel.sub_label">{{factory_panel.sub_label}}</span>
               </div>
             </div>
-            <button id="close-factory-btn" class="close-btn" title="Close Panel (Esc)">✕</button>
+            <button id="close-factory-btn" class="close-btn" data-i18n-title="factory_panel.close_title">✕</button>
           </div>
 
           <div class="drawer-content">
             <div class="control-card">
               <div class="card-header-row">
-                <label for="factory-productivity">Work Productivity</label>
+                <label for="factory-productivity" data-i18n="factory_panel.work_productivity">{{factory_panel.work_productivity}}</label>
                 <span id="productivity-val" class="highlight-val">70%</span>
               </div>
               <input type="range" id="factory-productivity" min="10" max="100" value="70" />
               <div class="productivity-markers">
-                <span>10% Idle</span>
-                <span>50%</span>
-                <span>100% Max</span>
+                <span data-i18n="factory_panel.productivity_idle">{{factory_panel.productivity_idle}}</span>
+                <span data-i18n="factory_panel.productivity_mid">{{factory_panel.productivity_mid}}</span>
+                <span data-i18n="factory_panel.productivity_max">{{factory_panel.productivity_max}}</span>
               </div>
             </div>
 
             <!-- Quick Presets -->
             <div class="presets-row">
-              <button class="preset-btn" data-val="25">Eco (25%)</button>
-              <button class="preset-btn" data-val="60">Standard (60%)</button>
-              <button class="preset-btn danger" data-val="100">Overdrive (100%)</button>
+              <button class="preset-btn" data-val="25" data-i18n="factory_panel.preset_eco">{{factory_panel.preset_eco}}</button>
+              <button class="preset-btn" data-val="60" data-i18n="factory_panel.preset_standard">{{factory_panel.preset_standard}}</button>
+              <button class="preset-btn danger" data-val="100" data-i18n="factory_panel.preset_overdrive">{{factory_panel.preset_overdrive}}</button>
             </div>
 
             <!-- Real-time Stack Emission Indicators -->
             <div class="metrics-block">
-              <h3>Real-Time Stack Emissions</h3>
+              <h3 data-i18n="factory_panel.stack_emissions_title">{{factory_panel.stack_emissions_title}}</h3>
               <div class="metric-row">
-                <span class="label">Smoke Density:</span>
-                <span id="smoke-density-text" class="val text-danger">Dense Black Soot</span>
+                <span class="label" data-i18n="factory_panel.smoke_density_label">{{factory_panel.smoke_density_label}}</span>
+                <span id="smoke-density-text" class="val text-danger" data-i18n="metrics_status.smoke_dense">{{metrics_status.smoke_dense}}</span>
               </div>
               <div class="metric-row">
-                <span class="label">SO₂ Output Rate:</span>
+                <span class="label" data-i18n="factory_panel.so2_rate_label">{{factory_panel.so2_rate_label}}</span>
                 <span id="so2-rate-text" class="val">140 kg/h</span>
               </div>
               <div class="metric-row">
-                <span class="label">NOₓ Output Rate:</span>
+                <span class="label" data-i18n="factory_panel.nox_rate_label">{{factory_panel.nox_rate_label}}</span>
                 <span id="nox-rate-text" class="val">95 kg/h</span>
               </div>
               <div class="metric-row">
-                <span class="label">Thermal Output:</span>
+                <span class="label" data-i18n="factory_panel.thermal_output_label">{{factory_panel.thermal_output_label}}</span>
                 <span id="thermal-val" class="val">860 MW</span>
               </div>
             </div>
@@ -109,16 +109,16 @@
                 <div class="mc-header-row">
                   <div class="mc-title-group">
                     <span class="mc-icon">🏆</span>
-                    <span class="mc-title">TROPOSPHERIC TECH TREE</span>
+                    <span class="mc-title" data-i18n="tech_tree_modal.title">{{tech_tree_modal.title}}</span>
                   </div>
                   <div class="mc-header-right">
-                    <span id="mc-xp-level" class="mc-xp-level">LVL 0</span>
-                    <button id="close-tree-btn" class="mc-close-btn" title="Close (Esc)">✕</button>
+                    <span id="mc-xp-level" class="mc-xp-level">{{tech_tree_modal.level}}</span>
+                    <button id="close-tree-btn" class="mc-close-btn" data-i18n-title="tech_tree_modal.close_title">✕</button>
                   </div>
                 </div>
                 <div class="mc-xp-bar-container">
                   <div id="mc-xp-fill" class="mc-xp-fill" style="width: 0%"></div>
-                  <span id="mc-xp-text" class="mc-xp-text">0 / 5 Advancements (0%)</span>
+                  <span id="mc-xp-text" class="mc-xp-text">{{tech_tree_modal.progress}}</span>
                 </div>
               </div>
 
@@ -134,56 +134,56 @@
       <!-- Right: Control Panel Sidebar -->
       <aside class="control-panel">
         <header class="panel-header">
-          <h1>Acid Rain Sim</h1>
+          <h1 data-i18n="control_panel.title">{{control_panel.title}}</h1>
           <span class="badge">v0.1.0</span>
         </header>
 
         <div class="panel-section">
-          <h2>Simulation Status</h2>
+          <h2 data-i18n="control_panel.status_header">{{control_panel.status_header}}</h2>
           <div class="status-item">
             <span class="status-dot online"></span>
-            <span id="status-text">Atmosphere Active (60 FPS)</span>
+            <span id="status-text" data-i18n="control_panel.status_active">{{control_panel.status_active}}</span>
           </div>
         </div>
 
         <div class="panel-section">
-          <h2>Environment Controls</h2>
+          <h2 data-i18n="control_panel.controls_header">{{control_panel.controls_header}}</h2>
           <div class="control-group">
-            <label for="rain-intensity">Rainfall Intensity</label>
+            <label for="rain-intensity" data-i18n="control_panel.rain_intensity">{{control_panel.rain_intensity}}</label>
             <input type="range" id="rain-intensity" min="0" max="100" value="50" />
           </div>
           <div class="control-group">
-            <label for="so2-emissions">SO₂ Emissions</label>
+            <label for="so2-emissions" data-i18n="control_panel.so2_emissions">{{control_panel.so2_emissions}}</label>
             <input type="range" id="so2-emissions" min="0" max="100" value="70" />
           </div>
           <div class="control-group">
-            <label for="nox-emissions">NOₓ Emissions</label>
+            <label for="nox-emissions" data-i18n="control_panel.nox_emissions">{{control_panel.nox_emissions}}</label>
             <input type="range" id="nox-emissions" min="0" max="100" value="60" />
           </div>
         </div>
 
         <div class="panel-section">
-          <h2>Ecological Indicators</h2>
+          <h2 data-i18n="control_panel.indicators_header">{{control_panel.indicators_header}}</h2>
           <div class="metrics-grid">
             <div class="metric-card">
-              <span class="metric-label">Precipitation pH</span>
+              <span class="metric-label" data-i18n="control_panel.precipitation_ph">{{control_panel.precipitation_ph}}</span>
               <span class="metric-value danger-text" id="ph-metric">4.2</span>
-              <span class="metric-status text-danger" id="ph-status">Acid Rain</span>
+              <span class="metric-status text-danger" id="ph-status" data-i18n="metrics_status.rain_severe">{{metrics_status.rain_severe}}</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Lake Acidity</span>
+              <span class="metric-label" data-i18n="control_panel.lake_acidity">{{control_panel.lake_acidity}}</span>
               <span class="metric-value" id="lake-metric">5.4</span>
-              <span class="metric-status" id="lake-status">Fish At Risk</span>
+              <span class="metric-status" id="lake-status" data-i18n="metrics_status.lake_stress">{{metrics_status.lake_stress}}</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Soil Quality</span>
+              <span class="metric-label" data-i18n="control_panel.soil_quality">{{control_panel.soil_quality}}</span>
               <span class="metric-value" id="soil-metric">6.1</span>
-              <span class="metric-status" id="soil-status">Nutrient Leaching</span>
+              <span class="metric-status" id="soil-status" data-i18n="metrics_status.soil_leaching">{{metrics_status.soil_leaching}}</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Foliage Health</span>
+              <span class="metric-label" data-i18n="control_panel.foliage_health">{{control_panel.foliage_health}}</span>
               <span class="metric-value" id="tree-metric">78%</span>
-              <span class="metric-status" id="tree-status">Chlorosis Stress</span>
+              <span class="metric-status" id="tree-status" data-i18n="metrics_status.tree_chlorosis">{{metrics_status.tree_chlorosis}}</span>
             </div>
           </div>
         </div>
