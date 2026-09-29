@@ -8,9 +8,127 @@
   </head>
   <body>
     <div id="app">
-      <!-- Left: Simulation Canvas -->
+      <!-- Main Simulation Viewport -->
       <section class="simulation-container">
         <canvas id="sim-canvas"></canvas>
+
+        <!-- FPS / Shooting Game Style Reaction Kill-Feed (Top Right) -->
+        <div id="kill-feed" class="kill-feed-container"></div>
+
+        <!-- Quick Dock: Dedicated Tech Tree Button -->
+        <div id="quick-dock-buttons" class="quick-dock-buttons">
+          <button id="open-tree-btn" class="dock-btn tree-dock-btn" title="View Minecraft-Style Reaction Tech Tree">
+            🏆 <span>Advancement Tree</span>
+          </button>
+        </div>
+
+        <!-- TOP RESEARCH BAR (Visible when zoomed into smoke) -->
+        <div id="research-top-bar" class="research-top-bar hidden">
+          <div class="rt-left">
+            <button id="back-to-env-btn" class="rt-back-btn" title="Return to Landscape (Esc)">
+              ⬅ Return to Environment <span class="kbd">Esc</span>
+            </button>
+            <div class="rt-title-group">
+              <span class="pulse-dot"></span>
+              <span class="rt-title">Atmospheric Chemistry</span>
+            </div>
+          </div>
+          <div class="rt-spawners">
+            <span class="spawner-label">Add Molecule:</span>
+            <button class="spawn-btn" data-type="SO2">SO₂</button>
+            <button class="spawn-btn" data-type="O2">O₂</button>
+            <button class="spawn-btn" data-type="H2O">H₂O</button>
+            <button class="spawn-btn" data-type="NO">NO</button>
+            <button id="reset-molecules-btn" class="spawn-btn danger">Reset Field</button>
+          </div>
+        </div>
+
+        <!-- FACTORY PRODUCTIVITY CONTROLLER (Left Panel, Shown ONLY when Factory is focused) -->
+        <aside id="factory-panel" class="factory-drawer hidden">
+          <div class="drawer-header">
+            <div class="drawer-title-group">
+              <span class="icon">🏭</span>
+              <div>
+                <h2>Coal Power Plant</h2>
+                <span class="sub-label">Industrial Emission Station</span>
+              </div>
+            </div>
+            <button id="close-factory-btn" class="close-btn" title="Close Panel (Esc)">✕</button>
+          </div>
+
+          <div class="drawer-content">
+            <div class="control-card">
+              <div class="card-header-row">
+                <label for="factory-productivity">Work Productivity</label>
+                <span id="productivity-val" class="highlight-val">70%</span>
+              </div>
+              <input type="range" id="factory-productivity" min="10" max="100" value="70" />
+              <div class="productivity-markers">
+                <span>10% Idle</span>
+                <span>50%</span>
+                <span>100% Max</span>
+              </div>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="presets-row">
+              <button class="preset-btn" data-val="25">Eco (25%)</button>
+              <button class="preset-btn" data-val="60">Standard (60%)</button>
+              <button class="preset-btn danger" data-val="100">Overdrive (100%)</button>
+            </div>
+
+            <!-- Real-time Stack Emission Indicators -->
+            <div class="metrics-block">
+              <h3>Real-Time Stack Emissions</h3>
+              <div class="metric-row">
+                <span class="label">Smoke Density:</span>
+                <span id="smoke-density-text" class="val text-danger">Dense Black Soot</span>
+              </div>
+              <div class="metric-row">
+                <span class="label">SO₂ Output Rate:</span>
+                <span id="so2-rate-text" class="val">140 kg/h</span>
+              </div>
+              <div class="metric-row">
+                <span class="label">NOₓ Output Rate:</span>
+                <span id="nox-rate-text" class="val">95 kg/h</span>
+              </div>
+              <div class="metric-row">
+                <span class="label">Thermal Output:</span>
+                <span id="thermal-val" class="val">860 MW</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- MINECRAFT-STYLE ADVANCEMENTS MODAL / DRAWER -->
+        <div id="tree-modal" class="tree-modal hidden">
+          <div class="tree-modal-backdrop" id="tree-backdrop"></div>
+          <div class="tree-modal-container">
+            <div class="mc-tree-container">
+              <div class="mc-header">
+                <div class="mc-header-row">
+                  <div class="mc-title-group">
+                    <span class="mc-icon">🏆</span>
+                    <span class="mc-title">TROPOSPHERIC TECH TREE</span>
+                  </div>
+                  <div class="mc-header-right">
+                    <span id="mc-xp-level" class="mc-xp-level">LVL 0</span>
+                    <button id="close-tree-btn" class="mc-close-btn" title="Close (Esc)">✕</button>
+                  </div>
+                </div>
+                <div class="mc-xp-bar-container">
+                  <div id="mc-xp-fill" class="mc-xp-fill" style="width: 0%"></div>
+                  <span id="mc-xp-text" class="mc-xp-text">0 / 5 Advancements (0%)</span>
+                </div>
+              </div>
+
+              <!-- Interactive Advancement Tree Grid -->
+              <div class="mc-tree-canvas" id="mc-tree-grid">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Right: Control Panel Sidebar -->
@@ -21,39 +139,51 @@
         </header>
 
         <div class="panel-section">
-          <h2>System Status</h2>
+          <h2>Simulation Status</h2>
           <div class="status-item">
             <span class="status-dot online"></span>
-            <span id="status-text">Vite Frontend Connected</span>
+            <span id="status-text">Atmosphere Active (60 FPS)</span>
           </div>
         </div>
 
         <div class="panel-section">
           <h2>Environment Controls</h2>
           <div class="control-group">
-            <label for="rain-intensity">Rain Intensity</label>
+            <label for="rain-intensity">Rainfall Intensity</label>
             <input type="range" id="rain-intensity" min="0" max="100" value="50" />
           </div>
           <div class="control-group">
             <label for="so2-emissions">SO₂ Emissions</label>
-            <input type="range" id="so2-emissions" min="0" max="100" value="30" />
+            <input type="range" id="so2-emissions" min="0" max="100" value="70" />
           </div>
           <div class="control-group">
             <label for="nox-emissions">NOₓ Emissions</label>
-            <input type="range" id="nox-emissions" min="0" max="100" value="25" />
+            <input type="range" id="nox-emissions" min="0" max="100" value="60" />
           </div>
         </div>
 
         <div class="panel-section">
-          <h2>Metrics</h2>
+          <h2>Ecological Indicators</h2>
           <div class="metrics-grid">
             <div class="metric-card">
-              <span class="metric-label">Rain pH</span>
-              <span class="metric-value" id="ph-metric">5.6</span>
+              <span class="metric-label">Precipitation pH</span>
+              <span class="metric-value danger-text" id="ph-metric">4.2</span>
+              <span class="metric-status text-danger" id="ph-status">Acid Rain</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Soil Acidity</span>
-              <span class="metric-value" id="soil-metric">6.5</span>
+              <span class="metric-label">Lake Acidity</span>
+              <span class="metric-value" id="lake-metric">5.4</span>
+              <span class="metric-status" id="lake-status">Fish At Risk</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Soil Quality</span>
+              <span class="metric-value" id="soil-metric">6.1</span>
+              <span class="metric-status" id="soil-status">Nutrient Leaching</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Foliage Health</span>
+              <span class="metric-value" id="tree-metric">78%</span>
+              <span class="metric-status" id="tree-status">Chlorosis Stress</span>
             </div>
           </div>
         </div>
