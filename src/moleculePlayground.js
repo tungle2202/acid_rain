@@ -225,33 +225,53 @@ export class ReactionBurst {
   }
 }
 
-// Generate non-overlapping grid layout for floating molecules
+// Generate cleanly separated, non-overlapping grid layout for floating molecules
 export function layoutMoleculesGrid(types, bounds) {
   const molecules = [];
-  const cols = 4;
-  const rows = Math.ceil(types.length / cols);
+  const count = types.length;
+  if (count === 0) return molecules;
 
-  const startX = bounds.x + 45;
-  const startY = bounds.y + 50;
-  const spacingX = (bounds.width - 90) / Math.max(1, cols - 1);
-  const spacingY = (bounds.height - 100) / Math.max(1, rows);
+  // Compute optimal column count based on aspect ratio and molecule count
+  // For 6 molecules (e.g. Eiffel, Moai), 3 cols x 2 rows gives generous spacing!
+  // For 8 molecules (Smoke), 4 cols x 2 rows gives generous spacing!
+  let cols = count <= 6 ? Math.min(count, 3) : Math.min(count, 4);
+  let rows = Math.ceil(count / cols);
 
-  for (let i = 0; i < types.length; i++) {
+  const padX = 50;
+  const padY = 45;
+  const usableW = Math.max(120, bounds.width - padX * 2);
+  const usableH = Math.max(100, bounds.height - padY * 2);
+
+  const spacingX = cols > 1 ? usableW / (cols - 1) : 0;
+  const spacingY = rows > 1 ? usableH / (rows - 1) : 0;
+
+  for (let i = 0; i < count; i++) {
     const col = i % cols;
     const row = Math.floor(i / cols);
-    const x = startX + col * spacingX;
-    const y = startY + row * spacingY;
+    const countInRow = (row === rows - 1) ? (count - row * cols) : cols;
+
+    // Horizontally center items if the last row has fewer items
+    let x;
+    if (countInRow === cols) {
+      x = cols > 1 ? bounds.x + padX + col * spacingX : bounds.x + bounds.width * 0.5;
+    } else {
+      const rowUsableW = countInRow > 1 ? (countInRow - 1) * spacingX : 0;
+      const rowStartX = bounds.x + (bounds.width - rowUsableW) * 0.5;
+      x = countInRow > 1 ? rowStartX + col * spacingX : bounds.x + bounds.width * 0.5;
+    }
+
+    const y = rows > 1 ? bounds.y + padY + row * spacingY : bounds.y + bounds.height * 0.5;
     molecules.push(new FloatingMolecule(types[i], x, y));
   }
 
   return molecules;
 }
 
-// Find a free non-overlapping position in the bounds
-export function findFreePosition(existing, bounds, minDistance = 75) {
-  for (let attempt = 0; attempt < 40; attempt++) {
-    const testX = bounds.x + 45 + Math.random() * (bounds.width - 90);
-    const testY = bounds.y + 45 + Math.random() * (bounds.height - 90);
+// Find a free non-overlapping position in the bounds with guaranteed clearance
+export function findFreePosition(existing, bounds, minDistance = 90) {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const testX = bounds.x + 50 + Math.random() * Math.max(20, bounds.width - 100);
+    const testY = bounds.y + 45 + Math.random() * Math.max(20, bounds.height - 90);
 
     let overlaps = false;
     for (const m of existing) {
@@ -266,9 +286,9 @@ export function findFreePosition(existing, bounds, minDistance = 75) {
     }
   }
 
-  // Fallback
+  // Fallback with minimal offset from edge
   return {
-    x: bounds.x + bounds.width * 0.5 + (Math.random() - 0.5) * 60,
-    y: bounds.y + bounds.height * 0.5 + (Math.random() - 0.5) * 60,
+    x: bounds.x + 60 + Math.random() * Math.max(30, bounds.width - 120),
+    y: bounds.y + 55 + Math.random() * Math.max(30, bounds.height - 110),
   };
 }

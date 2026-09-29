@@ -329,6 +329,44 @@ export const MOLECULES = {
       { from: 2, to: 4, type: "double" },
     ],
   },
+
+  // ==========================================
+  // ACID PROTON & AQUEOUS CATIONS
+  // ==========================================
+  "H+": {
+    id: "H+",
+    formula: "H⁺",
+    name: "{{chemistry.molecules.H+.name}}",
+    color: "#ec4899",
+    type: "ion",
+    pH: "1.0",
+    tier: "rare",
+    desc: "{{chemistry.molecules.H+.desc}}",
+    atoms: [{ x: 0, y: 0, symbol: "H⁺", color: "#ec4899", r: 15 }],
+    bonds: [],
+  },
+  "Fe2+": {
+    id: "Fe2+",
+    formula: "Fe²⁺",
+    name: "{{chemistry.molecules.Fe2+.name}}",
+    color: "#10b981",
+    type: "ion",
+    tier: "legendary",
+    desc: "{{chemistry.molecules.Fe2+.desc}}",
+    atoms: [{ x: 0, y: 0, symbol: "Fe²⁺", color: "#10b981", r: 17 }],
+    bonds: [],
+  },
+  "Ca2+": {
+    id: "Ca2+",
+    formula: "Ca²⁺",
+    name: "{{chemistry.molecules.Ca2+.name}}",
+    color: "#93c5fd",
+    type: "ion",
+    tier: "legendary",
+    desc: "{{chemistry.molecules.Ca2+.desc}}",
+    atoms: [{ x: 0, y: 0, symbol: "Ca²⁺", color: "#93c5fd", r: 17 }],
+    bonds: [],
+  },
 };
 
 // ========================================================
@@ -425,32 +463,17 @@ export const ADVANCEMENT_NODES = [
 
   // Metal Corrosion branch (Eiffel Tower)
   {
-    id: "fe_sulfuric",
-    title: "{{chemistry.advancements.fe_sulfuric.title}}",
-    subtitle: "Fe + H₂SO₄ ➔ FeSO₄ + H₂",
-    desc: "{{chemistry.advancements.fe_sulfuric.desc}}",
+    id: "fe_acid_corrosion",
+    title: "{{chemistry.advancements.fe_acid_corrosion.title}}",
+    subtitle: "Fe + 2H⁺ ➔ Fe²⁺ + H₂",
+    desc: "{{chemistry.advancements.fe_acid_corrosion.desc}}",
     tier: "legendary",
     icon: "🗼",
-    parent: "h2so4_master",
+    parent: "root_emissions",
     reaction: {
-      reactants: ["Fe", "H2SO4"],
-      product: "FeSO4",
-      equation: "Fe + H₂SO₄ ➔ FeSO₄ + H₂",
-    },
-    unlocked: false,
-  },
-  {
-    id: "fe_nitric",
-    title: "{{chemistry.advancements.fe_nitric.title}}",
-    subtitle: "Fe + 2HNO₃ ➔ Fe(NO₃)₂ + H₂",
-    desc: "{{chemistry.advancements.fe_nitric.desc}}",
-    tier: "legendary",
-    icon: "🧪",
-    parent: "hno3_master",
-    reaction: {
-      reactants: ["Fe", "HNO3"],
-      product: "Fe(NO3)2",
-      equation: "Fe + 2HNO₃ ➔ Fe(NO₃)₂ + H₂",
+      reactants: ["Fe", "H+"],
+      product: "Fe2+",
+      equation: "Fe + 2H⁺ ➔ Fe²⁺ + H₂",
     },
     unlocked: false,
   },
@@ -472,32 +495,17 @@ export const ADVANCEMENT_NODES = [
 
   // Stone Monument Dissolution branch (Moai Statue)
   {
-    id: "caco3_sulfuric",
-    title: "{{chemistry.advancements.caco3_sulfuric.title}}",
-    subtitle: "CaCO₃ + H₂SO₄ ➔ CaSO₄ + H₂O + CO₂",
-    desc: "{{chemistry.advancements.caco3_sulfuric.desc}}",
+    id: "caco3_acid_dissolution",
+    title: "{{chemistry.advancements.caco3_acid_dissolution.title}}",
+    subtitle: "CaCO₃ + 2H⁺ ➔ Ca²⁺ + H₂O + CO₂",
+    desc: "{{chemistry.advancements.caco3_acid_dissolution.desc}}",
     tier: "legendary",
     icon: "🗿",
-    parent: "h2so4_master",
+    parent: "root_emissions",
     reaction: {
-      reactants: ["CaCO3", "H2SO4"],
-      product: "CaSO4",
-      equation: "CaCO₃ + H₂SO₄ ➔ CaSO₄ + H₂O + CO₂",
-    },
-    unlocked: false,
-  },
-  {
-    id: "caco3_nitric",
-    title: "{{chemistry.advancements.caco3_nitric.title}}",
-    subtitle: "CaCO₃ + 2HNO₃ ➔ Ca(NO₃)₂ + H₂O + CO₂",
-    desc: "{{chemistry.advancements.caco3_nitric.desc}}",
-    tier: "legendary",
-    icon: "🏛️",
-    parent: "hno3_master",
-    reaction: {
-      reactants: ["CaCO3", "HNO3"],
-      product: "Ca(NO3)2",
-      equation: "CaCO₃ + 2HNO₃ ➔ Ca(NO₃)₂ + H₂O + CO₂",
+      reactants: ["CaCO3", "H+"],
+      product: "Ca2+",
+      equation: "CaCO₃ + 2H⁺ ➔ Ca²⁺ + H₂O + CO₂",
     },
     unlocked: false,
   },
@@ -506,9 +514,9 @@ export const ADVANCEMENT_NODES = [
 class GamifiedChemistryEngine {
   constructor() {
     this.advancements = JSON.parse(JSON.stringify(ADVANCEMENT_NODES));
-    this.unlockedMolecules = new Set(["SO2", "O2", "H2O", "NO", "Fe", "CaCO3"]);
+    this.unlockedMolecules = new Set(["SO2", "O2", "H2O", "NO", "Fe", "CaCO3", "H+"]);
     this.discoveryHistory = [];
-    this.failReason = "No spontaneous reaction between these molecules. Try combining an acid with Fe or CaCO₃, or an oxide with O₂/H₂O!";
+    this.failReason = "No spontaneous reaction between these molecules. Try combining H⁺ with Fe or CaCO₃, or an oxide with O₂/H₂O!";
   }
 
   getAvailableMolecules() {

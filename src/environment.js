@@ -229,22 +229,79 @@ export class SmokeParticle {
   }
 }
 
-// Outer Border Glow for Smoke Hover
+// Outer Borderline Glow for Smoke Hover (ONLY the very outer contour glows, no interior strokes)
+let smokeGlowCanvas = null;
+let smokeGlowCtx = null;
+
 export function drawSmokeOuterBorderGlow(ctx, particles) {
-  if (!particles.length) return;
+  if (!particles || particles.length === 0) return;
+
+  // 1. Calculate bounding box of all smoke particles
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    const left = p.x - p.radius;
+    const top = p.y - p.radius;
+    const right = p.x + p.radius;
+    const bottom = p.y + p.radius;
+    if (left < minX) minX = left;
+    if (top < minY) minY = top;
+    if (right > maxX) maxX = right;
+    if (bottom > maxY) maxY = bottom;
+  }
+
+  const pad = 28;
+  minX = Math.floor(minX - pad);
+  minY = Math.floor(minY - pad);
+  maxX = Math.ceil(maxX + pad);
+  maxY = Math.ceil(maxY + pad);
+  const w = maxX - minX;
+  const h = maxY - minY;
+  if (w <= 0 || h <= 0) return;
+
+  // 2. Lazy instantiate offscreen canvas
+  if (!smokeGlowCanvas) {
+    smokeGlowCanvas = document.createElement("canvas");
+    smokeGlowCtx = smokeGlowCanvas.getContext("2d");
+  }
+  if (smokeGlowCanvas.width !== w || smokeGlowCanvas.height !== h) {
+    smokeGlowCanvas.width = w;
+    smokeGlowCanvas.height = h;
+  }
+  smokeGlowCtx.clearRect(0, 0, w, h);
+
+  // 3. Draw outer stroke of all circles onto offscreen canvas
+  smokeGlowCtx.save();
+  smokeGlowCtx.translate(-minX, -minY);
+  smokeGlowCtx.strokeStyle = "#38bdf8";
+  smokeGlowCtx.lineWidth = 5.5;
+  smokeGlowCtx.beginPath();
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    smokeGlowCtx.moveTo(p.x + p.radius, p.y);
+    smokeGlowCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  }
+  smokeGlowCtx.stroke();
+
+  // 4. Punch out the entire interior using destination-out
+  // This erases ALL interior circles and lines, leaving ONLY the very outer borderline!
+  smokeGlowCtx.globalCompositeOperation = "destination-out";
+  smokeGlowCtx.fillStyle = "#000000";
+  smokeGlowCtx.beginPath();
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    smokeGlowCtx.moveTo(p.x + p.radius, p.y);
+    smokeGlowCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  }
+  smokeGlowCtx.fill();
+  smokeGlowCtx.restore();
+
+  // 5. Draw the purely outer borderline with neon glow onto the main canvas
   ctx.save();
   ctx.shadowColor = "#38bdf8";
-  ctx.shadowBlur = 24;
-  ctx.strokeStyle = "rgba(56, 189, 248, 0.85)";
-  ctx.lineWidth = 3.5;
-
-  ctx.beginPath();
-  for (let i = 0; i < particles.length; i += 2) {
-    const p = particles[i];
-    ctx.moveTo(p.x + p.radius, p.y);
-    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-  }
-  ctx.stroke();
+  ctx.shadowBlur = 18;
+  ctx.drawImage(smokeGlowCanvas, minX, minY);
+  ctx.drawImage(smokeGlowCanvas, minX, minY);
   ctx.restore();
 }
 

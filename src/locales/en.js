@@ -157,6 +157,18 @@ export default {
         name: "Calcium Nitrate",
         desc: "Highly soluble calcium salt that leaches out of stone monuments during acid downpours.",
       },
+      "H+": {
+        name: "Hydrogen Ion (Acid Proton)",
+        desc: "Free reactive H⁺ cation from dissociated acid precipitation, driving rapid metal and stone corrosion.",
+      },
+      "Fe2+": {
+        name: "Iron(II) Ion (Dissolved Metal)",
+        desc: "Aqueous Fe²⁺ cation released when acid precipitation attacks the metallic iron lattice, pitting structural girders.",
+      },
+      "Ca2+": {
+        name: "Calcium Ion (Dissolved Calcite)",
+        desc: "Soluble Ca²⁺ cation produced as acidic rainfall leaches calcium carbonate out of the stone statue.",
+      },
     },
     advancements: {
       root_emissions: {
@@ -184,6 +196,10 @@ export default {
         title: "Nitric Catastrophe (HNO₃)",
         desc: "Synthesize Nitric Acid! Toxic nitrate deluge that dissolves soil nutrients and fish gills.",
       },
+      fe_acid_corrosion: {
+        title: "Acid Metal Corrosion",
+        desc: "Acidic H⁺ protons strip electrons from structural iron, dissolving metallic girders into aqueous Fe²⁺ ions and releasing hydrogen gas.",
+      },
       fe_sulfuric: {
         title: "Sulfuric Steel Eater",
         desc: "Sulfuric acid dissolves metallic iron into soluble sulfate, eroding the Eiffel Tower.",
@@ -195,6 +211,10 @@ export default {
       fe_rust: {
         title: "Atmospheric Rusting",
         desc: "Oxygen oxidizes damp iron into brittle reddish-brown rust patina.",
+      },
+      caco3_acid_dissolution: {
+        title: "Calcite Stone Dissolution",
+        desc: "Acid H⁺ protons react violently with calcium carbonate, effervescing carbon dioxide and dissolving stone statues into soluble calcium.",
       },
       caco3_sulfuric: {
         title: "Gypsum Stone Decay",

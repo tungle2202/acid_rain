@@ -41,14 +41,6 @@ const state = {
   researchTarget: "smoke", // 'smoke' | 'eiffel' | 'moai'
   factoryPanelOpen: false,
   treeModalOpen: false,
-  landscapePan: 0, // 0.0 (left: volcano/factory) to 1.0 (right: eiffel/moai)
-  panOffset: 0, // camera horizontal offset in world coordinates
-  isPanning: false,
-  hasDragged: false,
-  panStartX: 0,
-  panStartOffset: 0,
-  mouseScreenX: 0,
-  mouseScreenY: 0,
   camera: {
     zoom: 1.0,
     targetZoom: 1.0,
@@ -60,23 +52,23 @@ const state = {
   volcano: {
     x: 16,
     y: 0,
-    width: 150,
+    width: 130,
     height: 160,
     isErupting: false,
     eruptionTimer: 0,
     lavaSparks: [],
   },
   eiffel: {
-    x: 1140,
+    x: 620,
     y: 0,
-    width: 170,
-    height: 280,
+    width: 110,
+    height: 225,
   },
   moai: {
-    x: 1460,
+    x: 770,
     y: 0,
-    width: 130,
-    height: 210,
+    width: 90,
+    height: 165,
   },
   draggedMolecule: null,
   hoveredMolecule: null,
@@ -92,9 +84,8 @@ const killFeed = document.getElementById("kill-feed");
 let width = 0;
 let height = 0;
 let groundY = 0;
-let worldWidth = 1850;
-let lakeStartX = 540;
-let lakeEndX = 980;
+let lakeStartX = 340;
+let lakeEndX = 600;
 
 // Unified smoke particles (factory + volcano merged into single sky cloud)
 const smokeParticles = [];
@@ -108,16 +99,16 @@ let floatingMolecules = [];
 const reactionBursts = [];
 
 const factory = {
-  x: 180,
+  x: 160,
   y: 0,
-  width: 175,
+  width: 140,
   height: 160,
 };
 
 let lakeBounds = {
-  x: 540,
+  x: 340,
   y: 0,
-  width: 440,
+  width: 260,
   height: 0,
 };
 
@@ -130,21 +121,26 @@ function resize() {
   canvas.height = height;
 
   groundY = Math.floor(height * 0.72);
-  worldWidth = Math.max(1850, Math.floor(width * 1.85));
 
-  // Position Volcano on the very left
-  state.volcano.x = 16;
-  state.volcano.y = groundY - 145;
+  // Scale components responsively to fit the entire landscape comfortably on screen
+  const scale = Math.max(0.72, Math.min(1.15, width / 1050));
+
+  // 1. Volcano (Far Left)
+  state.volcano.width = Math.round(125 * scale);
+  state.volcano.x = Math.round(width * 0.015);
+  state.volcano.y = groundY - Math.round(135 * scale);
   state.volcano.height = height - state.volcano.y;
 
-  // Position Factory to the right of the volcano
-  factory.x = state.volcano.x + state.volcano.width + 12;
-  factory.y = groundY - 145;
+  // 2. Factory (Next to Volcano)
+  factory.width = Math.round(140 * scale);
+  factory.x = state.volcano.x + state.volcano.width + Math.round(10 * scale);
+  factory.y = groundY - Math.round(135 * scale);
   factory.height = height - factory.y;
 
-  // Lake bounds between left bank and right bank
-  lakeStartX = 540;
-  lakeEndX = 980;
+  // 3. Lake (Central Reservoir with room for left trees)
+  lakeStartX = factory.x + factory.width + Math.round(75 * scale);
+  const lakeW = Math.max(160, Math.round(width * 0.23));
+  lakeEndX = lakeStartX + lakeW;
   lakeBounds = {
     x: lakeStartX,
     y: groundY + 18,
@@ -152,16 +148,19 @@ function resize() {
     height: height - (groundY + 18),
   };
 
-  // Eiffel Tower on the right side of the lake
-  state.eiffel.width = 170;
-  state.eiffel.height = 280;
-  state.eiffel.x = 1140;
+  // 4. Eiffel Tower (Metal Landmark on Right Bank)
+  state.eiffel.width = Math.round(110 * scale);
+  state.eiffel.height = Math.round(225 * scale);
+  state.eiffel.x = lakeEndX + Math.round(22 * scale);
   state.eiffel.y = groundY - state.eiffel.height;
 
-  // Moai Statue to the right of Eiffel Tower
-  state.moai.width = 130;
-  state.moai.height = 210;
-  state.moai.x = 1460;
+  // 5. Moai Statue (Rock Landmark on Far Right)
+  state.moai.width = Math.round(90 * scale);
+  state.moai.height = Math.round(165 * scale);
+  state.moai.x = state.eiffel.x + state.eiffel.width + Math.round(35 * scale);
+  if (state.moai.x + state.moai.width > width - 15) {
+    state.moai.x = width - 15 - state.moai.width;
+  }
   state.moai.y = groundY - state.moai.height;
 
   // Re-link fish lake bounds
@@ -172,19 +171,19 @@ function resize() {
     s.lake = lakeBounds;
   }
 
-  // Update pan offset if in overview
-  const maxPanX = Math.max(0, worldWidth - width);
-  state.panOffset = state.landscapePan * maxPanX;
+  // Camera remains centered at 0, 0 in overview
   if (state.activeView === "overview") {
-    state.camera.targetX = state.panOffset;
+    state.camera.targetX = 0;
+    state.camera.targetY = 0;
+    state.camera.targetZoom = 1.0;
   }
 
-  // Rain across full panoramic width
+  // Rain across full screen width
   if (rainDrops.length === 0) {
-    const rainCount = Math.floor(worldWidth * 0.1);
+    const rainCount = Math.floor(width * 0.1);
     for (let i = 0; i < rainCount; i++) {
       rainDrops.push({
-        x: Math.random() * worldWidth,
+        x: Math.random() * width,
         y: Math.random() * height,
         speed: 4 + Math.random() * 5,
         len: 12 + Math.random() * 12,
@@ -328,13 +327,13 @@ function render() {
   ctx.scale(cam.zoom, cam.zoom);
   ctx.translate(-width / 2 - cam.x, -height / 2 - cam.y);
 
-  // 2. Sky Atmosphere (Dark Atmospheric Sky spanning full panoramic world)
+  // 2. Sky Atmosphere (Dark Atmospheric Sky)
   const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
   skyGrad.addColorStop(0, "#080d14");
   skyGrad.addColorStop(0.6, "#132133");
   skyGrad.addColorStop(1, "#1c2e42");
   ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, worldWidth, groundY);
+  ctx.fillRect(0, 0, width, groundY);
 
   // 3. Smoke Emissions (Factory & Volcano merging into single pile)
   lastFactorySmoke++;
@@ -389,7 +388,7 @@ function render() {
     }
   }
 
-  // 5. Draw OUTSIDE BORDER GLOW ONLY if smoke is hovered (No inner glow)
+  // 5. Draw OUTSIDE BORDERLINE GLOW ONLY if smoke is hovered (No interior circles or lines)
   if (state.hoverTarget === "smoke") {
     drawSmokeOuterBorderGlow(ctx, smokeParticles);
   }
@@ -408,7 +407,7 @@ function render() {
   const isFactoryHovered = state.hoverTarget === "factory";
   drawFactory(ctx, factory, isFactoryHovered);
 
-  // 7. Raindrops spanning full panoramic landscape
+  // 7. Raindrops spanning canvas
   if (state.rainIntensity > 0) {
     const isAcidic = state.rainPh < 4.8;
     ctx.strokeStyle = isAcidic ? "rgba(248, 113, 113, 0.45)" : "rgba(56, 189, 248, 0.4)";
@@ -421,14 +420,14 @@ function render() {
       r.x += 0.8;
       if (r.y > groundY + 50) {
         r.y = -r.len;
-        r.x = Math.random() * worldWidth;
+        r.x = Math.random() * width;
       }
     }
     ctx.stroke();
   }
 
   // 8. Soil & Terrain (Drawn OVER factory & volcano bases to hide underground parts)
-  drawSoil(ctx, worldWidth, height, groundY, lakeStartX, lakeEndX);
+  drawSoil(ctx, width, height, groundY, lakeStartX, lakeEndX);
 
   // 9. Lake & Aquatic Life (Live Fish vs Dead Floating Skeletons)
   drawLake(ctx, height, groundY, simTime, bubbles, lakeStartX, lakeEndX);
@@ -446,18 +445,16 @@ function render() {
   }
 
   // 10. Left Bank Trees
-  drawTree(ctx, 390, groundY, 1.05, state.rainPh);
-  drawTree(ctx, 465, groundY, 0.9, state.rainPh);
+  drawTree(ctx, factory.x + factory.width + 24, groundY, 0.95, state.rainPh);
+  drawTree(ctx, factory.x + factory.width + 54, groundY, 0.82, state.rainPh);
 
   // 11. Eiffel Tower (Metal) & Moai Statue (Rock) on Right Bank
   drawEiffelTower(ctx, state.eiffel, state.hoverTarget === "eiffel", state.rainPh);
   drawMoaiStatue(ctx, state.moai, state.hoverTarget === "moai", state.rainPh);
 
   // 12. Right Bank Trees
-  drawTree(ctx, 1040, groundY, 0.95, state.rainPh);
-  drawTree(ctx, 1360, groundY, 1.0, state.rainPh);
-  drawTree(ctx, 1660, groundY, 1.1, state.rainPh);
-  drawTree(ctx, 1750, groundY, 0.85, state.rainPh);
+  drawTree(ctx, state.eiffel.x + state.eiffel.width + 18, groundY, 0.88, state.rainPh);
+  drawTree(ctx, state.moai.x + state.moai.width + 22, groundY, 0.92, state.rainPh);
 
   // 13. Research Mode: Stationary Geometric Molecules & Reaction Bursts
   if (cam.zoom > 1.4) {
@@ -466,56 +463,7 @@ function render() {
 
   ctx.restore();
 
-  // 14. Floating Hover Tooltip (drawn on top of screen in overview mode)
-  drawHoverTooltip(ctx, state.hoverTarget, state.mouseScreenX, state.mouseScreenY);
-
   requestAnimationFrame(render);
-}
-
-// ========================================================
-// HOVER TOOLTIPS IN OVERVIEW MODE
-// ========================================================
-function drawHoverTooltip(ctx, target, mouseX, mouseY) {
-  if (!target || state.activeView !== "overview" || state.isPanning) return;
-  let text = "";
-  if (target === "volcano") text = t("dock.hover_volcano");
-  else if (target === "factory") text = t("dock.hover_factory");
-  else if (target === "smoke") text = t("dock.hover_smoke");
-  else if (target === "eiffel") text = t("dock.hover_eiffel");
-  else if (target === "moai") text = t("dock.hover_moai");
-  if (!text) return;
-
-  ctx.save();
-  ctx.font = "600 12px Inter, system-ui, sans-serif";
-  const metrics = ctx.measureText(text);
-  const textW = metrics.width;
-  const padX = 10;
-  const boxW = textW + padX * 2;
-  const boxH = 26;
-
-  let tipX = mouseX - boxW / 2;
-  let tipY = mouseY - 36;
-  if (tipX < 10) tipX = 10;
-  if (tipX + boxW > width - 10) tipX = width - boxW - 10;
-  if (tipY < 10) tipY = mouseY + 24;
-
-  ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
-  ctx.shadowBlur = 10;
-  ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
-  ctx.strokeStyle = target === "moai" ? "rgba(192, 132, 252, 0.8)" : "rgba(56, 189, 248, 0.8)";
-  ctx.lineWidth = 1.2;
-
-  ctx.beginPath();
-  ctx.roundRect(tipX, tipY, boxW, boxH, 6);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = "#f8fafc";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, tipX + boxW / 2, tipY + boxH / 2);
-  ctx.restore();
 }
 
 // ========================================================
@@ -524,25 +472,25 @@ function drawHoverTooltip(ctx, target, mouseX, mouseY) {
 function getResearchBounds() {
   if (state.researchTarget === "eiffel") {
     return {
-      x: state.eiffel.x - 70,
-      y: state.eiffel.y + 10,
-      width: state.eiffel.width + 140,
+      x: state.eiffel.x - 120,
+      y: state.eiffel.y - 100,
+      width: state.eiffel.width + 240,
       height: 240,
     };
   } else if (state.researchTarget === "moai") {
     return {
-      x: state.moai.x - 70,
-      y: state.moai.y + 10,
-      width: state.moai.width + 140,
-      height: 220,
+      x: state.moai.x - 120,
+      y: state.moai.y - 100,
+      width: state.moai.width + 240,
+      height: 240,
     };
   } else {
     // smoke plume
     return {
-      x: state.volcano.x + 40,
+      x: state.volcano.x + 20,
       y: factory.y - 280,
-      width: 360,
-      height: 250,
+      width: 380,
+      height: 240,
     };
   }
 }
@@ -551,13 +499,13 @@ function initMoleculePlayground() {
   const bounds = getResearchBounds();
   let types = [];
   if (state.researchTarget === "eiffel") {
-    // Iron framework with acid rain agents
-    types = ["Fe", "H2SO4", "HNO3", "Fe", "H2SO4", "HNO3", "O2"];
+    // Eiffel Tower: ONLY show H+ and Fe (cleanly separated, non-overlapping)
+    types = ["Fe", "H+", "Fe", "H+", "Fe", "H+"];
   } else if (state.researchTarget === "moai") {
-    // Calcite volcanic rock with acid rain agents
-    types = ["CaCO3", "H2SO4", "HNO3", "CaCO3", "H2SO4", "HNO3"];
+    // Moai Statue: ONLY show H+ and CaCO3 (cleanly separated, non-overlapping)
+    types = ["CaCO3", "H+", "CaCO3", "H+", "CaCO3", "H+"];
   } else {
-    // Tropospheric smoke pollutants
+    // Tropospheric smoke pollutants (cleanly separated, non-overlapping)
     types = ["SO2", "O2", "H2O", "NO", "SO2", "O2", "H2O", "NO"];
   }
   floatingMolecules = layoutMoleculesGrid(types, bounds);
@@ -603,51 +551,14 @@ function drawMoleculePlayground(ctx) {
 requestAnimationFrame(render);
 
 // ========================================================
-// PANORAMIC SLIDER & CANVAS CONTROLS
-// ========================================================
-const panSlider = document.getElementById("landscape-pan-slider");
-const panLeftBtn = document.getElementById("pan-left-btn");
-const panRightBtn = document.getElementById("pan-right-btn");
-
-function setLandscapePan(ratio) {
-  state.landscapePan = Math.max(0, Math.min(1, ratio));
-  const maxPanX = Math.max(0, worldWidth - width);
-  state.panOffset = state.landscapePan * maxPanX;
-  if (state.activeView === "overview") {
-    state.camera.targetX = state.panOffset;
-  }
-  if (panSlider && document.activeElement !== panSlider) {
-    panSlider.value = Math.round(state.landscapePan * 100);
-  }
-}
-
-if (panSlider) {
-  panSlider.addEventListener("input", (e) => {
-    setLandscapePan(Number(e.target.value) / 100);
-  });
-}
-
-if (panLeftBtn) {
-  panLeftBtn.addEventListener("click", () => {
-    setLandscapePan(state.landscapePan - 0.25);
-  });
-}
-
-if (panRightBtn) {
-  panRightBtn.addEventListener("click", () => {
-    setLandscapePan(state.landscapePan + 0.25);
-  });
-}
-
-// ========================================================
 // MOUSE & HOVER INTERACTION
 // ========================================================
 function getSmokeBounds() {
   return {
     x: state.volcano.x,
-    y: factory.y - 280,
-    width: 380,
-    height: 280,
+    y: factory.y - 250,
+    width: factory.x + factory.width - state.volcano.x + 50,
+    height: 250,
   };
 }
 
@@ -663,8 +574,6 @@ canvas.addEventListener("mousemove", (e) => {
   const rect = canvas.getBoundingClientRect();
   const screenX = e.clientX - rect.left;
   const screenY = e.clientY - rect.top;
-  state.mouseScreenX = screenX;
-  state.mouseScreenY = screenY;
   const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
 
   // If in research view: handle dragging or molecule hover for label reveal
@@ -688,21 +597,7 @@ canvas.addEventListener("mousemove", (e) => {
     return;
   }
 
-  // Handle canvas drag-panning in overview
-  if (state.isPanning) {
-    const dx = screenX - state.panStartX;
-    if (Math.abs(dx) > 5) {
-      state.hasDragged = true;
-    }
-    const maxPanX = Math.max(0, worldWidth - width);
-    if (maxPanX > 0) {
-      const newOffset = state.panStartOffset - dx;
-      setLandscapePan(newOffset / maxPanX);
-    }
-    return;
-  }
-
-  // Overview hover checking
+  // Overview hover checking (Only glowing outline on hover, zero text hints)
   let newHover = null;
   if (isPointInVolcano(worldX, worldY, state.volcano)) {
     newHover = "volcano";
@@ -723,47 +618,24 @@ canvas.addEventListener("mousemove", (e) => {
 });
 
 canvas.addEventListener("mousedown", (e) => {
+  if (state.activeView !== "research") return;
   const rect = canvas.getBoundingClientRect();
-  const screenX = e.clientX - rect.left;
-  const screenY = e.clientY - rect.top;
-  const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
+  const { x: worldX, y: worldY } = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
 
-  if (state.activeView === "research") {
-    for (let i = floatingMolecules.length - 1; i >= 0; i--) {
-      const m = floatingMolecules[i];
-      if (m.contains(worldX, worldY)) {
-        state.draggedMolecule = m;
-        m.isDragging = true;
-        m.dragOffsetX = m.x - worldX;
-        m.dragOffsetY = m.y - worldY;
-        canvas.style.cursor = "grabbing";
-        break;
-      }
+  for (let i = floatingMolecules.length - 1; i >= 0; i--) {
+    const m = floatingMolecules[i];
+    if (m.contains(worldX, worldY)) {
+      state.draggedMolecule = m;
+      m.isDragging = true;
+      m.dragOffsetX = m.x - worldX;
+      m.dragOffsetY = m.y - worldY;
+      canvas.style.cursor = "grabbing";
+      break;
     }
-  } else if (state.activeView === "overview") {
-    // Start drag-panning
-    state.hasDragged = false;
-    state.isPanning = true;
-    state.panStartX = screenX;
-    state.panStartOffset = state.panOffset;
   }
 });
 
-canvas.addEventListener("wheel", (e) => {
-  if (state.activeView !== "overview") return;
-  const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-  const maxPanX = Math.max(0, worldWidth - width);
-  if (maxPanX <= 0) return;
-  e.preventDefault();
-  const panStep = delta / maxPanX;
-  setLandscapePan(state.landscapePan + panStep * 0.4);
-}, { passive: false });
-
 window.addEventListener("mouseup", () => {
-  if (state.isPanning) {
-    state.isPanning = false;
-  }
-
   if (!state.draggedMolecule) return;
 
   const dragged = state.draggedMolecule;
@@ -808,13 +680,11 @@ window.addEventListener("mouseup", () => {
 
         if (state.researchTarget === "eiffel") {
           if (reactant1Type === "Fe" || reactant2Type === "Fe") replenish("Fe");
-          if (reactant1Type === "H2SO4" || reactant2Type === "H2SO4") replenish("H2SO4");
-          if (reactant1Type === "HNO3" || reactant2Type === "HNO3") replenish("HNO3");
+          if (reactant1Type === "H+" || reactant2Type === "H+") replenish("H+");
           if (reactant1Type === "O2" || reactant2Type === "O2") replenish("O2");
         } else if (state.researchTarget === "moai") {
           if (reactant1Type === "CaCO3" || reactant2Type === "CaCO3") replenish("CaCO3");
-          if (reactant1Type === "H2SO4" || reactant2Type === "H2SO4") replenish("H2SO4");
-          if (reactant1Type === "HNO3" || reactant2Type === "HNO3") replenish("HNO3");
+          if (reactant1Type === "H+" || reactant2Type === "H+") replenish("H+");
         } else {
           if (reactant1Type === "H2O" || reactant2Type === "H2O") replenish("H2O");
           if (reactant1Type === "O2" || reactant2Type === "O2") replenish("O2");
@@ -843,16 +713,12 @@ canvas.addEventListener("mouseleave", () => {
 // ========================================================
 canvas.addEventListener("click", () => {
   if (state.activeView === "research") return;
-  if (state.hasDragged) {
-    state.hasDragged = false;
-    return;
-  }
 
   if (state.hoverTarget === "volcano") {
-    // Direct eruption! No caution, no pop-up, no panel.
+    // Direct eruption!
     triggerVolcanoEruption();
   } else if (state.hoverTarget === "factory") {
-    // Focus factory: Show productivity controller in left panel
+    // Focus factory
     openFactoryPanel();
   } else if (state.hoverTarget === "smoke") {
     openResearchMode("smoke");
@@ -890,9 +756,9 @@ function triggerKillFeed(result) {
 
   const card = document.createElement("div");
   const isAcid = result.product === "H2SO4" || result.product === "HNO3";
-  const isMetalSalt = result.product === "FeSO4" || result.product === "Fe(NO3)2";
+  const isMetalSalt = result.product === "FeSO4" || result.product === "Fe(NO3)2" || result.product === "Fe2+";
   const isRust = result.product === "Fe2O3";
-  const isStoneSalt = result.product === "CaSO4" || result.product === "Ca(NO3)2";
+  const isStoneSalt = result.product === "CaSO4" || result.product === "Ca(NO3)2" || result.product === "Ca2+";
 
   let tagText = t("kill_feed.oxidized");
   let tagClass = "";
@@ -951,10 +817,13 @@ function setupSpawnerButtons(target) {
 
   let types = [];
   if (target === "eiffel") {
-    types = ["Fe", "H2SO4", "HNO3", "O2"];
+    // Eiffel Tower: ONLY show H+ and Fe (plus O2)
+    types = ["Fe", "H+", "O2"];
   } else if (target === "moai") {
-    types = ["CaCO3", "H2SO4", "HNO3"];
+    // Moai Statue: ONLY show H+ and CaCO3
+    types = ["CaCO3", "H+"];
   } else {
+    // Smoke / Atmosphere: standard tropospheric molecules
     types = ["SO2", "NO2", "H2O", "O2"];
   }
 
@@ -974,13 +843,13 @@ function openResearchMode(target = "smoke") {
   state.researchTarget = target;
 
   if (target === "eiffel") {
-    state.camera.targetZoom = 2.2;
+    state.camera.targetZoom = 2.4;
     state.camera.targetX = state.eiffel.x + state.eiffel.width * 0.5 - width / 2;
     state.camera.targetY = state.eiffel.y + state.eiffel.height * 0.45 - height / 2;
     const titleEl = document.getElementById("rt-title");
     if (titleEl) titleEl.textContent = t("research_bar.title_eiffel");
   } else if (target === "moai") {
-    state.camera.targetZoom = 2.3;
+    state.camera.targetZoom = 2.4;
     state.camera.targetX = state.moai.x + state.moai.width * 0.5 - width / 2;
     state.camera.targetY = state.moai.y + state.moai.height * 0.45 - height / 2;
     const titleEl = document.getElementById("rt-title");
@@ -992,10 +861,6 @@ function openResearchMode(target = "smoke") {
     const titleEl = document.getElementById("rt-title");
     if (titleEl) titleEl.textContent = t("research_bar.title_smoke");
   }
-
-  // Hide pan slider while focused in research
-  const panBar = document.getElementById("landscape-pan-bar");
-  if (panBar) panBar.classList.add("hidden");
 
   researchTopBar.classList.remove("hidden");
   closeFactoryPanel();
@@ -1009,12 +874,8 @@ function closeResearchMode() {
   state.activeView = "overview";
 
   state.camera.targetZoom = 1.0;
-  state.camera.targetX = state.panOffset;
+  state.camera.targetX = 0;
   state.camera.targetY = 0;
-
-  // Restore pan slider in overview mode
-  const panBar = document.getElementById("landscape-pan-bar");
-  if (panBar) panBar.classList.remove("hidden");
 
   researchTopBar.classList.add("hidden");
   state.hoveredMolecule = null;

@@ -157,6 +157,18 @@ export default {
         name: "Canxi Nitrat",
         desc: "Muối canxi cực kỳ dễ tan, bị rửa trôi khỏi các di tích tượng đá trong các trận mưa axit.",
       },
+      "H+": {
+        name: "Ion Hydro (Proton Axit)",
+        desc: "Cation H⁺ hoạt tính cao phân ly từ mưa axit, tác nhân trực tiếp ăn mòn kim loại và hòa tan đá.",
+      },
+      "Fe2+": {
+        name: "Ion Sắt(II) (Kim loại tan)",
+        desc: "Cation Fe²⁺ hòa tan khi axit tấn công mạng tinh thể sắt, làm rỗ và suy yếu kết cấu tháp.",
+      },
+      "Ca2+": {
+        name: "Ion Canxi (Đá vôi tan)",
+        desc: "Cation Ca²⁺ hòa tan tạo thành khi axit rửa trôi canxi cacbonat khỏi tượng đá.",
+      },
     },
     advancements: {
       root_emissions: {
@@ -184,6 +196,10 @@ export default {
         title: "Thảm Họa Axit Nitric (HNO₃)",
         desc: "Tổng hợp thành công Axit Nitric! Cơn mưa nitrat độc hại hòa tan chất dinh dưỡng trong đất và làm hỏng mang cá.",
       },
+      fe_acid_corrosion: {
+        title: "Axit Ăn Mòn Kim Loại",
+        desc: "Các proton axit H⁺ lấy đi electron từ sắt, hòa tan các thanh dầm kim loại thành ion Fe²⁺ và giải phóng khí hydro.",
+      },
       fe_sulfuric: {
         title: "Gặm Nhấm Thép Sunfuric",
         desc: "Axit sunfuric hòa tan sắt kim loại thành muối sunfat, làm ăn mòn Tháp Eiffel.",
@@ -195,6 +211,10 @@ export default {
       fe_rust: {
         title: "Gỉ Sét Trong Không Khí",
         desc: "Oxi trong không khí oxi hóa sắt ẩm thành lớp gỉ nâu đỏ giòn xốp.",
+      },
+      caco3_acid_dissolution: {
+        title: "Axit Hòa Tan Tượng Đá",
+        desc: "Proton axit H⁺ phản ứng mạnh với canxi cacbonat, sủi bọt khí CO₂ và làm tan rã các chi tiết điêu khắc trên tượng đá.",
       },
       caco3_sulfuric: {
         title: "Thạch Cao Hóa Đá Tượng",
