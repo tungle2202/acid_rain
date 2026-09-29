@@ -86,6 +86,7 @@ let height = 0;
 let groundY = 0;
 let lakeStartX = 340;
 let lakeEndX = 600;
+let scale = 1.0;
 
 // Unified smoke particles (factory + volcano merged into single sky cloud)
 const smokeParticles = [];
@@ -123,52 +124,56 @@ function resize() {
   groundY = Math.floor(height * 0.72);
 
   // Scale components responsively to fit the entire landscape comfortably on screen
-  const scale = Math.max(0.72, Math.min(1.15, width / 1050));
+  scale = Math.max(0.72, Math.min(1.15, width / 1050));
 
   // 1. Volcano (Far Left)
-  state.volcano.width = Math.round(125 * scale);
-  state.volcano.x = Math.round(width * 0.015);
-  state.volcano.y = groundY - Math.round(135 * scale);
+  state.volcano.width = Math.round(130 * scale);
+  state.volcano.x = Math.round(width * 0.012);
+  state.volcano.y = groundY - Math.round(140 * scale);
   state.volcano.height = height - state.volcano.y;
 
   // 2. Factory (Next to Volcano)
-  factory.width = Math.round(140 * scale);
+  factory.width = Math.round(145 * scale);
   factory.x = state.volcano.x + state.volcano.width + Math.round(10 * scale);
-  factory.y = groundY - Math.round(135 * scale);
+  factory.y = groundY - Math.round(138 * scale);
   factory.height = height - factory.y;
 
-  // 3. Lake (Central Reservoir with room for left trees)
-  lakeStartX = factory.x + factory.width + Math.round(75 * scale);
-  const lakeW = Math.max(160, Math.round(width * 0.23));
-  lakeEndX = lakeStartX + lakeW;
-  lakeBounds = {
-    x: lakeStartX,
-    y: groundY + 18,
-    width: lakeEndX - lakeStartX,
-    height: height - (groundY + 18),
-  };
+  // 3. Left Trees gap & Lake Start
+  const leftTreesGap = Math.round(48 * scale);
+  lakeStartX = factory.x + factory.width + leftTreesGap;
 
-  // 4. Eiffel Tower (Metal Landmark on Right Bank)
-  state.eiffel.width = Math.round(110 * scale);
-  state.eiffel.height = Math.round(225 * scale);
-  state.eiffel.x = lakeEndX + Math.round(22 * scale);
-  state.eiffel.y = groundY - state.eiffel.height;
-
-  // 5. Moai Statue (Rock Landmark on Far Right)
-  state.moai.width = Math.round(90 * scale);
-  state.moai.height = Math.round(165 * scale);
-  state.moai.x = state.eiffel.x + state.eiffel.width + Math.round(35 * scale);
-  if (state.moai.x + state.moai.width > width - 15) {
-    state.moai.x = width - 15 - state.moai.width;
-  }
+  // 4. Right Bank Landmarks (Anchored from right margin to fill the right canvas without empty gaps)
+  const rightMargin = Math.max(16, Math.round(20 * scale));
+  state.moai.width = Math.round(105 * scale);
+  state.moai.height = Math.round(180 * scale);
+  state.moai.x = width - rightMargin - Math.round(175 * scale);
   state.moai.y = groundY - state.moai.height;
 
-  // Re-link fish lake bounds
+  state.eiffel.width = Math.round(125 * scale);
+  state.eiffel.height = Math.round(245 * scale);
+  state.eiffel.x = state.moai.x - Math.round(42 * scale) - state.eiffel.width;
+  state.eiffel.y = groundY - state.eiffel.height;
+
+  // 5. Lake (Expansive central reservoir spanning from left trees to Eiffel Tower)
+  lakeEndX = state.eiffel.x - Math.round(30 * scale);
+  if (lakeEndX - lakeStartX < 180) {
+    lakeEndX = lakeStartX + 180;
+  }
+  lakeBounds = {
+    x: lakeStartX,
+    y: groundY + 16,
+    width: lakeEndX - lakeStartX,
+    height: height - (groundY + 16),
+  };
+
+  // Re-link fish lake bounds and clamp immediately to safe swimming zone
   for (const f of liveFishes) {
     f.lake = lakeBounds;
+    f.clampToBounds(height);
   }
   for (const s of deadSkeletons) {
     s.lake = lakeBounds;
+    s.clampToBounds();
   }
 
   // Camera remains centered at 0, 0 in overview
@@ -426,15 +431,12 @@ function render() {
     ctx.stroke();
   }
 
-  // 8. Soil & Terrain (Drawn OVER factory & volcano bases to hide underground parts)
-  drawSoil(ctx, width, height, groundY, lakeStartX, lakeEndX);
-
-  // 9. Lake & Aquatic Life (Live Fish vs Dead Floating Skeletons)
+  // 8. Lake & Aquatic Life (Drawn in its water basin)
   drawLake(ctx, height, groundY, simTime, bubbles, lakeStartX, lakeEndX);
 
   const isFishStressed = state.lakePh < 5.8;
   for (const f of liveFishes) {
-    f.update(bubbles, isFishStressed);
+    f.update(bubbles, isFishStressed, height);
     f.draw(ctx, isFishStressed);
   }
 
@@ -444,17 +446,21 @@ function render() {
     s.draw(ctx);
   }
 
+  // 9. Soil & Terrain (Forms solid foreground embankments over underground parts and lake edges)
+  drawSoil(ctx, width, height, groundY, lakeStartX, lakeEndX);
+
   // 10. Left Bank Trees
-  drawTree(ctx, factory.x + factory.width + 24, groundY, 0.95, state.rainPh);
-  drawTree(ctx, factory.x + factory.width + 54, groundY, 0.82, state.rainPh);
+  drawTree(ctx, factory.x + factory.width + Math.round(16 * scale), groundY, 0.95, state.rainPh);
+  drawTree(ctx, factory.x + factory.width + Math.round(36 * scale), groundY, 0.82, state.rainPh);
 
   // 11. Eiffel Tower (Metal) & Moai Statue (Rock) on Right Bank
   drawEiffelTower(ctx, state.eiffel, state.hoverTarget === "eiffel", state.rainPh);
   drawMoaiStatue(ctx, state.moai, state.hoverTarget === "moai", state.rainPh);
 
-  // 12. Right Bank Trees
-  drawTree(ctx, state.eiffel.x + state.eiffel.width + 18, groundY, 0.88, state.rainPh);
-  drawTree(ctx, state.moai.x + state.moai.width + 22, groundY, 0.92, state.rainPh);
+  // 12. Right Bank Trees (Between landmarks and hugging far right edge)
+  drawTree(ctx, state.eiffel.x + state.eiffel.width + Math.round(20 * scale), groundY, 0.88, state.rainPh);
+  drawTree(ctx, state.moai.x + state.moai.width + Math.round(22 * scale), groundY, 0.92, state.rainPh);
+  drawTree(ctx, state.moai.x + state.moai.width + Math.round(52 * scale), groundY, 0.78, state.rainPh);
 
   // 13. Research Mode: Stationary Geometric Molecules & Reaction Bursts
   if (cam.zoom > 1.4) {
