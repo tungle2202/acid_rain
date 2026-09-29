@@ -68,8 +68,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Configure Tauri for Vietnamese Build
+        shell: pwsh
+        run: |
+          $tauriConf = Get-Content -Raw ./src-tauri/tauri.conf.json | ConvertFrom-Json
+          $tauriConf.build.beforeBuildCommand = "npm run build:vi"
+          $tauriConf | ConvertTo-Json -Depth 10 | Set-Content ./src-tauri/tauri.conf.json
+          Write-Host "Updated src-tauri/tauri.conf.json beforeBuildCommand to: $($tauriConf.build.beforeBuildCommand)"
+
+      - name: Build Frontend in Vietnamese (src/locales/vi.js)
+        run: npm run build:vi
+        env:
+          VITE_LANGUAGE: vi
+
       - name: Build Tauri Application (MSI & Binaries)
         run: npm run tauri build -- --bundles msi
+        env:
+          VITE_LANGUAGE: vi
 
       - name: Prepare Release Artifacts & Checksums
         id: prepare_artifacts
@@ -139,18 +154,21 @@ jobs:
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v3
-        if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/release/v0.2.0' || github.event_name == 'workflow_dispatch'
+        if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/') || github.event_name == 'workflow_dispatch'
         with:
           tag_name: ${{ steps.prepare_artifacts.outputs.tag_name }}
           name: Acid Rain ${{ steps.prepare_artifacts.outputs.tag_name }}
           body: |
             ## Acid Rain ${{ steps.prepare_artifacts.outputs.tag_name }} Release
 
+            ### Language
+            - **Default Language**: Vietnamese (Tiếng Việt) via `./src/locales/vi.js` (built with `npm run build:vi`).
+
             ### Windows Packages (x64)
             - **MSI Wizard Installer**: `Acid.Rain_${{ steps.prepare_artifacts.outputs.version }}_x64_en-US.msi`
               - Full Windows Installer setup wizard with Desktop & Start Menu shortcuts and uninstaller.
             - **Portable Executable**: `${{ steps.prepare_artifacts.outputs.portable_exe }}`
-              - Standalone executable. Run directly without installation.
+              - Standalone executable in Vietnamese. Run directly without installation.
             - **Portable ZIP**: `Acid.Rain_${{ steps.prepare_artifacts.outputs.version }}_x64_portable.zip`
               - Zipped archive containing the portable binary.
             - **Integrity**: Refer to `checksums.txt` for SHA-256 checksums.

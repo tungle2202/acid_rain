@@ -43,7 +43,7 @@ export function resolveLanguage() {
   } catch (e) {}
 
   // 3. Environment variable (Vite mode/env)
-  const envLang = import.meta.env?.VITE_LANGUAGE;
+  const envLang = import.meta.env.VITE_LANGUAGE;
   if (envLang && LOCALES[envLang]) {
     return envLang;
   }
