@@ -18,29 +18,93 @@ export class Fish {
   }
 
   reset() {
-    this.x = this.lake.x + 30 + Math.random() * Math.max(20, this.lake.width - 60);
-    this.y = this.lake.y + 25 + Math.random() * Math.max(20, this.lake.height - 45);
-    this.speed = 0.6 + Math.random() * 0.9;
+    const minX = this.lake.x + 65;
+    const maxX = Math.max(minX + 20, this.lake.x + this.lake.width - 65);
+    this.x = minX + Math.random() * (maxX - minX);
+
+    const minY = this.lake.y + 26;
+    const maxY = Math.max(minY + 20, this.lake.y + this.lake.height - 38);
+    this.y = minY + Math.random() * (maxY - minY);
+    this.targetY = this.y;
+    this.depthTimer = 60 + Math.random() * 180;
+    this.vy = 0;
+    this.tiltAngle = 0;
+
+    this.speed = 0.65 + Math.random() * 0.75;
     this.direction = Math.random() > 0.5 ? 1 : -1;
-    this.size = 14 + Math.random() * 8;
-    this.tailAngle = 0;
-    this.tailSpeed = 0.15 + Math.random() * 0.1;
+    this.size = 13 + Math.random() * 7;
+    this.tailAngle = Math.random() * Math.PI * 2;
+    this.tailSpeed = 0.14 + Math.random() * 0.08;
     this.color = Math.random() > 0.4 ? "#f97316" : "#eab308";
     this.bellyColor = "#fef08a";
     this.bubbleTimer = Math.random() * 200;
   }
 
-  update(bubbles, isStressed = false) {
+  clampToBounds(canvasHeight = null) {
+    const minX = this.lake.x + 65;
+    const maxX = Math.max(minX + 20, this.lake.x + this.lake.width - 65);
+    if (this.x < minX) this.x = minX;
+    if (this.x > maxX) this.x = maxX;
+
+    const minY = this.lake.y + 26;
+    const maxBoundY = canvasHeight ? canvasHeight - 38 : this.lake.y + this.lake.height - 38;
+    const maxY = Math.max(minY + 15, maxBoundY);
+    if (this.y < minY) this.y = minY;
+    if (this.y > maxY) this.y = maxY;
+    if (this.targetY < minY) this.targetY = minY;
+    if (this.targetY > maxY) this.targetY = maxY;
+  }
+
+  update(bubbles, isStressed = false, canvasHeight = null) {
+    const minX = this.lake.x + 65;
+    const maxX = Math.max(minX + 20, this.lake.x + this.lake.width - 65);
+    const minY = this.lake.y + 26;
+    const maxBoundY = canvasHeight ? canvasHeight - 38 : this.lake.y + this.lake.height - 38;
+    const maxY = Math.max(minY + 15, maxBoundY);
+
     const curSpeed = isStressed ? this.speed * 0.55 : this.speed;
     this.x += curSpeed * this.direction;
     this.tailAngle += this.tailSpeed * (isStressed ? 0.6 : 1);
 
-    if (this.x > this.lake.x + this.lake.width - 25) {
+    // Smooth horizontal turning within safe basin away from soil bedrock
+    if (this.x >= maxX) {
       this.direction = -1;
-    } else if (this.x < this.lake.x + 25) {
+      this.x = maxX;
+    } else if (this.x <= minX) {
       this.direction = 1;
+      this.x = minX;
     }
 
+    // Dynamic depth exploration
+    this.depthTimer--;
+    if (this.depthTimer <= 0) {
+      this.depthTimer = 140 + Math.random() * 200;
+      this.targetY = minY + Math.random() * (maxY - minY);
+    }
+
+    // Smooth vertical acceleration towards target depth
+    const diffY = this.targetY - this.y;
+    this.vy += diffY * 0.004;
+    this.vy *= 0.92;
+    const swimWave = Math.sin(this.tailAngle * 0.5) * (isStressed ? 0.15 : 0.32);
+    this.y += this.vy + swimWave;
+
+    // Hard clamp to prevent ever entering soil or surface
+    if (this.y < minY) {
+      this.y = minY;
+      this.vy = 0;
+      this.targetY = minY + 12 + Math.random() * 20;
+    } else if (this.y > maxY) {
+      this.y = maxY;
+      this.vy = 0;
+      this.targetY = maxY - 12 - Math.random() * 20;
+    }
+
+    // Dynamic pitch tilt (tilts slightly upward when ascending, downward when diving)
+    const targetTilt = Math.max(-0.25, Math.min(0.25, (this.vy / (curSpeed || 1)) * 0.35));
+    this.tiltAngle += (targetTilt - this.tiltAngle) * 0.08;
+
+    // Bubbles
     this.bubbleTimer--;
     if (this.bubbleTimer <= 0) {
       this.bubbleTimer = 180 + Math.random() * 200;
@@ -59,6 +123,8 @@ export class Fish {
     if (this.direction < 0) {
       ctx.scale(-1, 1);
     }
+    // Dynamic pitch tilt
+    ctx.rotate(this.direction < 0 ? -this.tiltAngle : this.tiltAngle);
 
     const s = this.size;
     const tailWiggle = Math.sin(this.tailAngle) * (isStressed ? 3 : 5);
@@ -73,6 +139,14 @@ export class Fish {
     ctx.fillStyle = isStressed ? "#ca8a04" : this.bellyColor;
     ctx.beginPath();
     ctx.ellipse(0, s * 0.18, s * 0.7, s * 0.22, 0, 0, Math.PI);
+    ctx.fill();
+
+    // Dorsal fin
+    ctx.fillStyle = isStressed ? "#854d0e" : (this.color === "#f97316" ? "#ea580c" : "#ca8a04");
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.2, -s * 0.45);
+    ctx.quadraticCurveTo(s * 0.1, -s * 0.8, s * 0.4, -s * 0.4);
+    ctx.closePath();
     ctx.fill();
 
     // Tail fin
@@ -103,20 +177,37 @@ export class Fish {
 export class FishSkeleton {
   constructor(lakeBounds, x) {
     this.lake = lakeBounds;
-    this.x = x || this.lake.x + 35 + Math.random() * Math.max(20, this.lake.width - 70);
-    this.y = this.lake.y + 6 + Math.random() * 12; // Floats near water surface
+    const minX = this.lake.x + 55;
+    const maxX = Math.max(minX + 20, this.lake.x + this.lake.width - 55);
+    this.x = x || (minX + Math.random() * (maxX - minX));
+    this.y = this.lake.y + 4 + Math.random() * 8; // Floats near water surface
     this.size = 14 + Math.random() * 6;
     this.floatOffset = Math.random() * Math.PI * 2;
-    this.driftSpeed = (Math.random() - 0.5) * 0.2;
+    this.driftSpeed = (Math.random() - 0.5) * 0.22;
     this.direction = Math.random() > 0.5 ? 1 : -1;
   }
 
+  clampToBounds() {
+    const minX = this.lake.x + 55;
+    const maxX = Math.max(minX + 20, this.lake.x + this.lake.width - 55);
+    if (this.x < minX) this.x = minX + 5;
+    if (this.x > maxX) this.x = maxX - 5;
+  }
+
   update(time) {
+    const minX = this.lake.x + 55;
+    const maxX = Math.max(minX + 20, this.lake.x + this.lake.width - 55);
     this.x += this.driftSpeed;
-    if (this.x < this.lake.x + 30) this.driftSpeed = Math.abs(this.driftSpeed);
-    if (this.x > this.lake.x + this.lake.width - 30) this.driftSpeed = -Math.abs(this.driftSpeed);
-    // Bob on water surface
-    this.currentY = this.y + Math.sin(time * 0.003 + this.floatOffset) * 2.5;
+    if (this.x < minX) {
+      this.x = minX;
+      this.driftSpeed = Math.abs(this.driftSpeed);
+    }
+    if (this.x > maxX) {
+      this.x = maxX;
+      this.driftSpeed = -Math.abs(this.driftSpeed);
+    }
+    // Bob gently on water surface
+    this.currentY = this.y + Math.sin(time * 0.003 + this.floatOffset) * 2.2;
   }
 
   draw(ctx) {
@@ -396,27 +487,50 @@ export function drawSoil(ctx, worldWidth, height, groundY, lakeStartX, lakeEndX)
   soilGrad.addColorStop(1, "#1c120a");
   ctx.fillStyle = soilGrad;
 
-  // 1. Left Bank Bedrock
+  // 1. Left Bank Bedrock (Smooth natural shoreline slope)
   ctx.beginPath();
   ctx.moveTo(0, groundY);
   ctx.lineTo(lakeStartX, groundY);
-  ctx.quadraticCurveTo(lakeStartX + 20, groundY + 15, lakeStartX + 35, groundY + 45);
-  ctx.lineTo(lakeStartX + 35, height);
+  ctx.quadraticCurveTo(lakeStartX + 20, groundY + 18, lakeStartX + 42, groundY + 50);
+  ctx.lineTo(lakeStartX + 45, height);
   ctx.lineTo(0, height);
   ctx.closePath();
   ctx.fill();
 
   // 2. Right Bank Bedrock (under Eiffel Tower & Moai)
   ctx.beginPath();
-  ctx.moveTo(lakeEndX - 35, groundY + 45);
-  ctx.quadraticCurveTo(lakeEndX - 20, groundY + 15, lakeEndX, groundY);
+  ctx.moveTo(lakeEndX - 45, height);
+  ctx.lineTo(lakeEndX - 42, groundY + 50);
+  ctx.quadraticCurveTo(lakeEndX - 20, groundY + 18, lakeEndX, groundY);
   ctx.lineTo(worldWidth, groundY);
   ctx.lineTo(worldWidth, height);
-  ctx.lineTo(lakeEndX - 35, height);
   ctx.closePath();
   ctx.fill();
 
-  // 3. Loam & Grass - Left Bank
+  // 3. Lakebed sediment bedrock layer along the bottom
+  const bedGrad = ctx.createLinearGradient(0, height - 26, 0, height);
+  bedGrad.addColorStop(0, "#2a1c12");
+  bedGrad.addColorStop(1, "#120a05");
+  ctx.fillStyle = bedGrad;
+  ctx.beginPath();
+  ctx.moveTo(lakeStartX + 40, height - 22);
+  ctx.lineTo(lakeEndX - 40, height - 22);
+  ctx.lineTo(lakeEndX - 40, height);
+  ctx.lineTo(lakeStartX + 40, height);
+  ctx.closePath();
+  ctx.fill();
+
+  // Decorative riverbed pebbles along the bottom
+  ctx.fillStyle = "#3d2b1f";
+  const pebbleStep = 32;
+  for (let px = lakeStartX + 52; px < lakeEndX - 52; px += pebbleStep) {
+    const pr = 4 + (px % 5);
+    ctx.beginPath();
+    ctx.ellipse(px, height - 12, pr, pr * 0.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 4. Loam & Grass - Left Bank
   ctx.fillStyle = "#2d1c10";
   ctx.fillRect(0, groundY, lakeStartX, 10);
 
@@ -434,7 +548,7 @@ export function drawSoil(ctx, worldWidth, height, groundY, lakeStartX, lakeEndX)
   ctx.fillStyle = "#4d7c0f";
   ctx.fillRect(0, groundY - 2, lakeStartX, 3);
 
-  // 4. Loam & Grass - Right Bank
+  // 5. Loam & Grass - Right Bank
   ctx.fillStyle = "#2d1c10";
   ctx.fillRect(lakeEndX, groundY, worldWidth - lakeEndX, 10);
 
@@ -455,53 +569,59 @@ export function drawSoil(ctx, worldWidth, height, groundY, lakeStartX, lakeEndX)
 
 // Lake & Water rendering between left and right shores
 export function drawLake(ctx, height, groundY, time, bubbles, lakeStartX, lakeEndX) {
-  const lakeWidth = lakeEndX - lakeStartX;
+  const waterY = groundY + 16;
+  const waterLeft = lakeStartX + 12;
+  const waterRight = lakeEndX - 12;
+  const waterWidth = waterRight - waterLeft;
 
-  const waterGrad = ctx.createLinearGradient(0, groundY, 0, height);
-  waterGrad.addColorStop(0, "rgba(14, 116, 144, 0.85)");
-  waterGrad.addColorStop(0.4, "rgba(8, 47, 73, 0.92)");
-  waterGrad.addColorStop(1, "rgba(4, 20, 36, 0.98)");
+  const waterGrad = ctx.createLinearGradient(0, waterY, 0, height);
+  waterGrad.addColorStop(0, "rgba(14, 116, 144, 0.88)");
+  waterGrad.addColorStop(0.35, "rgba(8, 47, 73, 0.94)");
+  waterGrad.addColorStop(1, "rgba(3, 18, 32, 0.99)");
 
   ctx.save();
   ctx.beginPath();
-  ctx.moveTo(lakeStartX + 25, groundY + 18);
+  ctx.moveTo(waterLeft, waterY);
 
-  const wavePoints = 30;
+  const wavePoints = 36;
   for (let i = 0; i <= wavePoints; i++) {
-    const px = lakeStartX + 25 + (lakeWidth - 50) * (i / wavePoints);
-    const py = groundY + 18 + Math.sin(time * 0.003 + i * 0.5) * 3;
+    const px = waterLeft + waterWidth * (i / wavePoints);
+    const py = waterY + Math.sin(time * 0.003 + i * 0.45) * 2.8;
     ctx.lineTo(px, py);
   }
 
-  ctx.lineTo(lakeEndX - 25, height);
-  ctx.lineTo(lakeStartX + 25, height);
+  // Follow the basin contour down to the lakebed
+  ctx.lineTo(lakeEndX - 38, groundY + 52);
+  ctx.lineTo(lakeEndX - 38, height - 20);
+  ctx.lineTo(lakeStartX + 38, height - 20);
+  ctx.lineTo(lakeStartX + 38, groundY + 52);
   ctx.closePath();
   ctx.fillStyle = waterGrad;
   ctx.fill();
 
-  // Water surface line
-  ctx.strokeStyle = "rgba(56, 189, 248, 0.65)";
-  ctx.lineWidth = 2.5;
+  // Water surface shimmer line
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.7)";
+  ctx.lineWidth = 2.2;
   ctx.beginPath();
   for (let i = 0; i <= wavePoints; i++) {
-    const px = lakeStartX + 25 + (lakeWidth - 50) * (i / wavePoints);
-    const py = groundY + 18 + Math.sin(time * 0.003 + i * 0.5) * 3;
+    const px = waterLeft + waterWidth * (i / wavePoints);
+    const py = waterY + Math.sin(time * 0.003 + i * 0.45) * 2.8;
     if (i === 0) ctx.moveTo(px, py);
     else ctx.lineTo(px, py);
   }
   ctx.stroke();
 
   // Rising bubbles
-  ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
   for (let i = bubbles.length - 1; i >= 0; i--) {
     const b = bubbles[i];
     b.y -= b.speed;
-    b.x += Math.sin(b.y * 0.08) * 0.4;
+    b.x += Math.sin(b.y * 0.08) * 0.35;
     ctx.beginPath();
     ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
     ctx.fill();
 
-    if (b.y < groundY + 18) {
+    if (b.y < waterY) {
       bubbles.splice(i, 1);
     }
   }
