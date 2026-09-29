@@ -7,11 +7,23 @@ export default {
   dock: {
     advancement_tree: "Cây Tiến Trình",
     advancement_tree_title: "Xem Cây Phản Ứng Dạng Minecraft",
+    pan_left_title: "Trượt Sang Trái (Núi Lửa & Nhà Máy)",
+    pan_right_title: "Trượt Sang Phải (Tháp Eiffel & Tượng Moai)",
+    pan_volcano_factory: "🌋 Nhà Máy & Núi Lửa",
+    pan_monuments: "🗼 Tháp Eiffel & Moai 🗿",
+    hover_eiffel: "🗼 Tháp Eiffel (Kim Loại Sắt - Fe)",
+    hover_moai: "🗿 Tượng Moai (Khoáng Calcit - CaCO₃)",
+    hover_volcano: "🌋 Núi Lửa Hoạt Động (Nhấp để Phun trào)",
+    hover_factory: "🏭 Nhà Máy Nhiệt Điện (Nhấp để Điều khiển)",
+    hover_smoke: "☁️ Làn Khói Khí Quyển (Nhấp để Nghiên cứu)",
   },
   research_bar: {
     back_to_env: "⬅ Quay Lại Môi Trường",
     back_to_env_title: "Quay Lại Môi Trường (Esc)",
     title: "Hóa Học Khí Quyển",
+    title_smoke: "Hóa Học Khí Quyển (Tầng Đối Lưu)",
+    title_eiffel: "Tháp Eiffel & Hóa Học Ăn Mòn Kim Loại",
+    title_moai: "Tượng Moai & Hóa Học Ăn Mòn Khoáng Thạch",
     add_molecule: "Thêm Phân Tử:",
     reset_field: "Đặt Lại",
   },
@@ -40,7 +52,7 @@ export default {
     progress: "{completed} / {total} Tiến Trình ({percent}%)",
     badge_done: "HOÀN THÀNH",
     badge_locked: "CHƯA MỞ",
-    locked_desc: "??? Chuỗi phản ứng ẩn. Kéo thả phân tử trong làn khói để khám phá!",
+    locked_desc: "??? Chuỗi phản ứng ẩn. Kéo thả phân tử trong làn khói, Tháp Eiffel hoặc tượng Moai để khám phá!",
   },
   control_panel: {
     title: "Mô Phỏng Mưa Axit",
@@ -74,9 +86,12 @@ export default {
   kill_feed: {
     acid_formed: "TẠO THÀNH AXIT",
     oxidized: "ĐÃ OXI HÓA",
+    metal_corroded: "KIM LOẠI BỊ ĂN MÒN",
+    rust_formed: "GỈ SẮT HÌNH THÀNH",
+    stone_eroded: "ĐÁ BỊ ĂN MÒN",
   },
   chemistry: {
-    default_no_reaction: "Không có phản ứng tự phát giữa các phân tử này. Hãy thử kết hợp một oxit với O₂ hoặc H₂O!",
+    default_no_reaction: "Không có phản ứng tự phát giữa các phân tử này. Hãy thử kết hợp axit với Fe hoặc CaCO₃, hoặc oxit với O₂/H₂O!",
     molecules: {
       SO2: {
         name: "Lưu huỳnh Đioxit",
@@ -114,6 +129,34 @@ export default {
         name: "Axit Sunfurơ",
         desc: "Sản phẩm hòa tan trực tiếp của khí lưu huỳnh thô vào các giọt nước mưa rơi xuống.",
       },
+      Fe: {
+        name: "Sắt (Kim Loại Rèn)",
+        desc: "Nguyên tố kim loại cấu tạo nên khung vòm Tháp Eiffel. Dễ bị axit tấn công ăn mòn.",
+      },
+      FeSO4: {
+        name: "Sắt(II) Sunfat",
+        desc: "Muối ăn mòn sinh ra khi mưa axit sunfuric hòa tan sắt kim loại, giải phóng khí H₂.",
+      },
+      "Fe(NO3)2": {
+        name: "Sắt(II) Nitrat",
+        desc: "Muối nitrat dễ tan tạo thành khi axit nitric tấn công kết cấu thép và sắt.",
+      },
+      Fe2O3: {
+        name: "Sắt(III) Oxit (Gỉ Sắt)",
+        desc: "Sản phẩm oxi hóa màu nâu đỏ bong tróc làm giòn và thủng kết cấu kim loại.",
+      },
+      CaCO3: {
+        name: "Canxi Cacbonat (Đá Vôi / Calcit)",
+        desc: "Khoáng chất chủ yếu trong đá vôi, cẩm thạch và tro núi lửa tạo nên tượng Moai.",
+      },
+      CaSO4: {
+        name: "Canxi Sunfat (Thạch Cao)",
+        desc: "Khoáng sunfat tạo lớp vỏ giòn trên tượng đá rồi bong tróc, xóa sổ các chi tiết điêu khắc.",
+      },
+      "Ca(NO3)2": {
+        name: "Canxi Nitrat",
+        desc: "Muối canxi cực kỳ dễ tan, bị rửa trôi khỏi các di tích tượng đá trong các trận mưa axit.",
+      },
     },
     advancements: {
       root_emissions: {
@@ -140,6 +183,26 @@ export default {
       hno3_master: {
         title: "Thảm Họa Axit Nitric (HNO₃)",
         desc: "Tổng hợp thành công Axit Nitric! Cơn mưa nitrat độc hại hòa tan chất dinh dưỡng trong đất và làm hỏng mang cá.",
+      },
+      fe_sulfuric: {
+        title: "Gặm Nhấm Thép Sunfuric",
+        desc: "Axit sunfuric hòa tan sắt kim loại thành muối sunfat, làm ăn mòn Tháp Eiffel.",
+      },
+      fe_nitric: {
+        title: "Tàn Phá Kim Loại Nitrat",
+        desc: "Axit nitric tấn công khung sắt, tước đoạt độ bền cấu trúc kèm theo sủi bọt khí.",
+      },
+      fe_rust: {
+        title: "Gỉ Sét Trong Không Khí",
+        desc: "Oxi trong không khí oxi hóa sắt ẩm thành lớp gỉ nâu đỏ giòn xốp.",
+      },
+      caco3_sulfuric: {
+        title: "Thạch Cao Hóa Đá Tượng",
+        desc: "Mưa sunfuric biến đá rắn thành thạch cao bở vụn, làm tan biến nét chạm khắc Moai cổ đại.",
+      },
+      caco3_nitric: {
+        title: "Rửa Trôi Khoáng Calcit",
+        desc: "Axit nitric hòa tan canxi cacbonat, cuốn trôi vĩnh viễn nét mặt các di tích tượng đá.",
       },
     },
   },

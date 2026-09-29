@@ -22,7 +22,18 @@
           </button>
         </div>
 
-        <!-- TOP RESEARCH BAR (Visible when zoomed into smoke) -->
+        <!-- Landscape Panoramic View Slider (Slide left and right across the environment) -->
+        <div id="landscape-pan-bar" class="landscape-pan-bar">
+          <button id="pan-left-btn" class="pan-nav-btn" data-i18n-title="dock.pan_left_title">◀</button>
+          <div class="pan-slider-track">
+            <span class="pan-landmark left" data-i18n="dock.pan_volcano_factory">{{dock.pan_volcano_factory}}</span>
+            <input type="range" id="landscape-pan-slider" min="0" max="100" value="0" />
+            <span class="pan-landmark right" data-i18n="dock.pan_monuments">{{dock.pan_monuments}}</span>
+          </div>
+          <button id="pan-right-btn" class="pan-nav-btn" data-i18n-title="dock.pan_right_title">▶</button>
+        </div>
+
+        <!-- TOP RESEARCH BAR (Visible when zoomed into smoke, Eiffel Tower, or Moai) -->
         <div id="research-top-bar" class="research-top-bar hidden">
           <div class="rt-left">
             <button id="back-to-env-btn" class="rt-back-btn" data-i18n-title="research_bar.back_to_env_title">
@@ -30,15 +41,12 @@
             </button>
             <div class="rt-title-group">
               <span class="pulse-dot"></span>
-              <span class="rt-title" data-i18n="research_bar.title">{{research_bar.title}}</span>
+              <span class="rt-title" id="rt-title" data-i18n="research_bar.title">{{research_bar.title}}</span>
             </div>
           </div>
-          <div class="rt-spawners">
+          <div class="rt-spawners" id="rt-spawners">
             <span class="spawner-label" data-i18n="research_bar.add_molecule">{{research_bar.add_molecule}}</span>
-            <button class="spawn-btn" data-type="SO2">SO₂</button>
-            <button class="spawn-btn" data-type="O2">O₂</button>
-            <button class="spawn-btn" data-type="H2O">H₂O</button>
-            <button class="spawn-btn" data-type="NO">NO</button>
+            <div id="spawner-buttons-container" class="spawner-buttons-container"></div>
             <button id="reset-molecules-btn" class="spawn-btn danger" data-i18n="research_bar.reset_field">{{research_bar.reset_field}}</button>
           </div>
         </div>

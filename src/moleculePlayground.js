@@ -131,7 +131,7 @@ export class FloatingMolecule {
       ctx.strokeStyle = this.molData.color || "#38bdf8";
       ctx.lineWidth = 1.4;
 
-      const tagW = 60;
+      const tagW = Math.max(60, (this.molData.formula?.length || 4) * 9 + 16);
       const tagH = 22;
       const tagY = this.radius + 6;
 

@@ -7,11 +7,23 @@ export default {
   dock: {
     advancement_tree: "Advancement Tree",
     advancement_tree_title: "View Minecraft-Style Reaction Tech Tree",
+    pan_left_title: "Pan Left (Volcano & Factory)",
+    pan_right_title: "Pan Right (Eiffel Tower & Moai Statue)",
+    pan_volcano_factory: "🌋 Factory & Volcano",
+    pan_monuments: "🗼 Eiffel & Moai 🗿",
+    hover_eiffel: "🗼 Eiffel Tower (Iron - Fe)",
+    hover_moai: "🗿 Moai Statue (Calcite - CaCO₃)",
+    hover_volcano: "🌋 Active Volcano (Click to Erupt)",
+    hover_factory: "🏭 Coal Power Plant (Click to Control)",
+    hover_smoke: "☁️ Smoke Plume (Click for Research Mode)",
   },
   research_bar: {
     back_to_env: "⬅ Return to Environment",
     back_to_env_title: "Return to Landscape (Esc)",
     title: "Atmospheric Chemistry",
+    title_smoke: "Atmospheric Chemistry (Troposphere)",
+    title_eiffel: "Eiffel Tower Metallurgy & Acid Corrosion",
+    title_moai: "Moai Statue Calcite & Stone Dissolution",
     add_molecule: "Add Molecule:",
     reset_field: "Reset Field",
   },
@@ -40,7 +52,7 @@ export default {
     progress: "{completed} / {total} Advancements ({percent}%)",
     badge_done: "DONE",
     badge_locked: "LOCKED",
-    locked_desc: "??? Hidden reaction chain. Drag molecules in smoke POV to discover!",
+    locked_desc: "??? Hidden reaction chain. Drag molecules in smoke, Eiffel Tower, or Moai POV to discover!",
   },
   control_panel: {
     title: "Acid Rain Sim",
@@ -74,9 +86,12 @@ export default {
   kill_feed: {
     acid_formed: "ACID FORMED",
     oxidized: "OXIDIZED",
+    metal_corroded: "METAL CORRODED",
+    rust_formed: "RUST FORMED",
+    stone_eroded: "STONE ERODED",
   },
   chemistry: {
-    default_no_reaction: "No spontaneous reaction between these molecules. Try combining an oxide with O₂ or H₂O!",
+    default_no_reaction: "No spontaneous reaction between these molecules. Try combining an acid with Fe or CaCO₃, or an oxide with O₂/H₂O!",
     molecules: {
       SO2: {
         name: "Sulfur Dioxide",
@@ -114,6 +129,34 @@ export default {
         name: "Sulfurous Acid",
         desc: "Direct dissolution product of raw sulfur smoke into falling rainwater droplets.",
       },
+      Fe: {
+        name: "Iron (Wrought Metal)",
+        desc: "Structural metallic element forming the Eiffel Tower framework. Vulnerable to acid attack.",
+      },
+      FeSO4: {
+        name: "Iron(II) Sulfate",
+        desc: "Corrosion salt produced when sulfuric acid rain dissolves metallic iron, releasing H₂ gas.",
+      },
+      "Fe(NO3)2": {
+        name: "Iron(II) Nitrate",
+        desc: "Soluble nitrate salt formed from nitric acid attack on steel and iron architecture.",
+      },
+      Fe2O3: {
+        name: "Iron(III) Oxide (Rust)",
+        desc: "Flaking reddish-brown oxidation product that weakens and perforates structural metal.",
+      },
+      CaCO3: {
+        name: "Calcium Carbonate (Calcite)",
+        desc: "Principal mineral in limestone, marble, and volcanic tuff making up the Moai monument.",
+      },
+      CaSO4: {
+        name: "Calcium Sulfate (Gypsum)",
+        desc: "Crusty sulfate mineral formed on stone statues that spalls off, destroying carved features.",
+      },
+      "Ca(NO3)2": {
+        name: "Calcium Nitrate",
+        desc: "Highly soluble calcium salt that leaches out of stone monuments during acid downpours.",
+      },
     },
     advancements: {
       root_emissions: {
@@ -140,6 +183,26 @@ export default {
       hno3_master: {
         title: "Nitric Catastrophe (HNO₃)",
         desc: "Synthesize Nitric Acid! Toxic nitrate deluge that dissolves soil nutrients and fish gills.",
+      },
+      fe_sulfuric: {
+        title: "Sulfuric Steel Eater",
+        desc: "Sulfuric acid dissolves metallic iron into soluble sulfate, eroding the Eiffel Tower.",
+      },
+      fe_nitric: {
+        title: "Nitrate Metallurgy Ruin",
+        desc: "Nitric acid attacks iron framework, stripping structural integrity with gas evolution.",
+      },
+      fe_rust: {
+        title: "Atmospheric Rusting",
+        desc: "Oxygen oxidizes damp iron into brittle reddish-brown rust patina.",
+      },
+      caco3_sulfuric: {
+        title: "Gypsum Stone Decay",
+        desc: "Sulfuric rain converts solid stone into crumbling gypsum, dissolving ancient Moai carvings.",
+      },
+      caco3_nitric: {
+        title: "Calcite Leaching Wash",
+        desc: "Nitric acid dissolves calcium carbonate, washing away stone monument features forever.",
       },
     },
   },

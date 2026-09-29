@@ -1,8 +1,8 @@
 /**
  * Chemistry Engine & Gamified Molecule Geometry
  * Defines:
- * - 2D geometric ball-and-stick structures for atmospheric molecules
- * - Reaction discovery rules & synthesis logic
+ * - 2D geometric ball-and-stick structures for atmospheric & environmental molecules
+ * - Reaction discovery rules & synthesis logic (Atmospheric, Metal Corrosion, Stone Dissolution)
  * - Minecraft-style Advancement/Tech Tree data
  * 
  * NOTE: Text fields contain placeholders waiting to be hydrated by the active language script.
@@ -16,7 +16,6 @@ export const MOLECULES = {
     color: "#f59e0b",
     type: "pollutant",
     desc: "{{chemistry.molecules.SO2.desc}}",
-    // Bent geometry: S at origin, 2 O at ~119°
     atoms: [
       { x: 0, y: -6, symbol: "S", color: "#f59e0b", r: 16 },
       { x: -18, y: 14, symbol: "O", color: "#ef4444", r: 12 },
@@ -34,7 +33,6 @@ export const MOLECULES = {
     color: "#38bdf8",
     type: "atmospheric",
     desc: "{{chemistry.molecules.O2.desc}}",
-    // Linear diatomic: 2 O atoms
     atoms: [
       { x: -14, y: 0, symbol: "O", color: "#38bdf8", r: 13 },
       { x: 14, y: 0, symbol: "O", color: "#38bdf8", r: 13 },
@@ -48,7 +46,6 @@ export const MOLECULES = {
     color: "#60a5fa",
     type: "atmospheric",
     desc: "{{chemistry.molecules.H2O.desc}}",
-    // Bent geometry: O at origin, 2 H at ~104.5°
     atoms: [
       { x: 0, y: -5, symbol: "O", color: "#3b82f6", r: 14 },
       { x: -15, y: 11, symbol: "H", color: "#f8fafc", r: 8 },
@@ -66,7 +63,6 @@ export const MOLECULES = {
     color: "#fb923c",
     type: "intermediate",
     desc: "{{chemistry.molecules.SO3.desc}}",
-    // Trigonal planar: 3 O atoms around central S at 120°
     atoms: [
       { x: 0, y: 0, symbol: "S", color: "#f59e0b", r: 16 },
       { x: 0, y: -24, symbol: "O", color: "#ef4444", r: 12 },
@@ -86,7 +82,6 @@ export const MOLECULES = {
     color: "#a78bfa",
     type: "pollutant",
     desc: "{{chemistry.molecules.NO.desc}}",
-    // Diatomic: N - O
     atoms: [
       { x: -13, y: 0, symbol: "N", color: "#8b5cf6", r: 13 },
       { x: 13, y: 0, symbol: "O", color: "#ef4444", r: 12 },
@@ -100,7 +95,6 @@ export const MOLECULES = {
     color: "#f43f5e",
     type: "intermediate",
     desc: "{{chemistry.molecules.NO2.desc}}",
-    // Bent geometry: N with 2 O
     atoms: [
       { x: 0, y: -6, symbol: "N", color: "#8b5cf6", r: 14 },
       { x: -17, y: 13, symbol: "O", color: "#ef4444", r: 12 },
@@ -186,10 +180,159 @@ export const MOLECULES = {
       { from: 4, to: 5, type: "single" },
     ],
   },
+
+  // ==========================================
+  // METALLURGY / EIFFEL TOWER MOLECULES
+  // ==========================================
+  Fe: {
+    id: "Fe",
+    formula: "Fe",
+    name: "{{chemistry.molecules.Fe.name}}",
+    color: "#94a3b8",
+    type: "metal",
+    desc: "{{chemistry.molecules.Fe.desc}}",
+    atoms: [{ x: 0, y: 0, symbol: "Fe", color: "#94a3b8", r: 18 }],
+    bonds: [],
+  },
+  FeSO4: {
+    id: "FeSO4",
+    formula: "FeSO₄",
+    name: "{{chemistry.molecules.FeSO4.name}}",
+    color: "#10b981",
+    type: "salt",
+    tier: "legendary",
+    desc: "{{chemistry.molecules.FeSO4.desc}}",
+    atoms: [
+      { x: -16, y: 0, symbol: "Fe", color: "#94a3b8", r: 16 },
+      { x: 14, y: 0, symbol: "S", color: "#f59e0b", r: 14 },
+      { x: 14, y: -20, symbol: "O", color: "#ef4444", r: 10 },
+      { x: 14, y: 20, symbol: "O", color: "#ef4444", r: 10 },
+      { x: 30, y: 0, symbol: "O", color: "#ef4444", r: 10 },
+    ],
+    bonds: [
+      { from: 0, to: 1, type: "single" },
+      { from: 1, to: 2, type: "double" },
+      { from: 1, to: 3, type: "double" },
+      { from: 1, to: 4, type: "single" },
+    ],
+  },
+  "Fe(NO3)2": {
+    id: "Fe(NO3)2",
+    formula: "Fe(NO₃)₂",
+    name: "{{chemistry.molecules.Fe(NO3)2.name}}",
+    color: "#38bdf8",
+    type: "salt",
+    tier: "legendary",
+    desc: "{{chemistry.molecules.Fe(NO3)2.desc}}",
+    atoms: [
+      { x: 0, y: 0, symbol: "Fe", color: "#94a3b8", r: 16 },
+      { x: -22, y: -12, symbol: "N", color: "#8b5cf6", r: 12 },
+      { x: 22, y: -12, symbol: "N", color: "#8b5cf6", r: 12 },
+      { x: -34, y: -24, symbol: "O", color: "#ef4444", r: 10 },
+      { x: 34, y: -24, symbol: "O", color: "#ef4444", r: 10 },
+    ],
+    bonds: [
+      { from: 0, to: 1, type: "single" },
+      { from: 0, to: 2, type: "single" },
+      { from: 1, to: 3, type: "double" },
+      { from: 2, to: 4, type: "double" },
+    ],
+  },
+  Fe2O3: {
+    id: "Fe2O3",
+    formula: "Fe₂O₃",
+    name: "{{chemistry.molecules.Fe2O3.name}}",
+    color: "#ea580c",
+    type: "rust",
+    tier: "rare",
+    desc: "{{chemistry.molecules.Fe2O3.desc}}",
+    atoms: [
+      { x: -18, y: 0, symbol: "Fe", color: "#94a3b8", r: 16 },
+      { x: 18, y: 0, symbol: "Fe", color: "#94a3b8", r: 16 },
+      { x: 0, y: -18, symbol: "O", color: "#ea580c", r: 11 },
+      { x: -24, y: 20, symbol: "O", color: "#ea580c", r: 11 },
+      { x: 24, y: 20, symbol: "O", color: "#ea580c", r: 11 },
+    ],
+    bonds: [
+      { from: 0, to: 2, type: "single" },
+      { from: 1, to: 2, type: "single" },
+      { from: 0, to: 3, type: "double" },
+      { from: 1, to: 4, type: "double" },
+    ],
+  },
+
+  // ==========================================
+  // STONE MONUMENT / MOAI STATUE MOLECULES
+  // ==========================================
+  CaCO3: {
+    id: "CaCO3",
+    formula: "CaCO₃",
+    name: "{{chemistry.molecules.CaCO3.name}}",
+    color: "#e2e8f0",
+    type: "mineral",
+    desc: "{{chemistry.molecules.CaCO3.desc}}",
+    atoms: [
+      { x: -18, y: 0, symbol: "Ca", color: "#93c5fd", r: 16 },
+      { x: 14, y: 0, symbol: "C", color: "#64748b", r: 13 },
+      { x: 14, y: -20, symbol: "O", color: "#ef4444", r: 11 },
+      { x: 30, y: 10, symbol: "O", color: "#ef4444", r: 11 },
+      { x: 4, y: 18, symbol: "O", color: "#ef4444", r: 11 },
+    ],
+    bonds: [
+      { from: 0, to: 1, type: "single" },
+      { from: 1, to: 2, type: "double" },
+      { from: 1, to: 3, type: "single" },
+      { from: 1, to: 4, type: "single" },
+    ],
+  },
+  CaSO4: {
+    id: "CaSO4",
+    formula: "CaSO₄",
+    name: "{{chemistry.molecules.CaSO4.name}}",
+    color: "#f1f5f9",
+    type: "mineral",
+    tier: "legendary",
+    desc: "{{chemistry.molecules.CaSO4.desc}}",
+    atoms: [
+      { x: -18, y: 0, symbol: "Ca", color: "#93c5fd", r: 16 },
+      { x: 16, y: 0, symbol: "S", color: "#f59e0b", r: 14 },
+      { x: 16, y: -20, symbol: "O", color: "#ef4444", r: 10 },
+      { x: 16, y: 20, symbol: "O", color: "#ef4444", r: 10 },
+      { x: 32, y: 0, symbol: "O", color: "#ef4444", r: 10 },
+    ],
+    bonds: [
+      { from: 0, to: 1, type: "single" },
+      { from: 1, to: 2, type: "double" },
+      { from: 1, to: 3, type: "double" },
+      { from: 1, to: 4, type: "single" },
+    ],
+  },
+  "Ca(NO3)2": {
+    id: "Ca(NO3)2",
+    formula: "Ca(NO₃)₂",
+    name: "{{chemistry.molecules.Ca(NO3)2.name}}",
+    color: "#cbd5e1",
+    type: "salt",
+    tier: "legendary",
+    desc: "{{chemistry.molecules.Ca(NO3)2.desc}}",
+    atoms: [
+      { x: 0, y: 0, symbol: "Ca", color: "#93c5fd", r: 16 },
+      { x: -22, y: -12, symbol: "N", color: "#8b5cf6", r: 12 },
+      { x: 22, y: -12, symbol: "N", color: "#8b5cf6", r: 12 },
+      { x: -34, y: -24, symbol: "O", color: "#ef4444", r: 10 },
+      { x: 34, y: -24, symbol: "O", color: "#ef4444", r: 10 },
+    ],
+    bonds: [
+      { from: 0, to: 1, type: "single" },
+      { from: 0, to: 2, type: "single" },
+      { from: 1, to: 3, type: "double" },
+      { from: 2, to: 4, type: "double" },
+    ],
+  },
 };
 
 // ========================================================
-// REACTION DISCOVERY REGISTRY & MINECRAFT ADVANCEMENT TREE
+// REACTION DISCOVERY REGISTRY & ADVANCEMENT TREE
 // ========================================================
 export const ADVANCEMENT_NODES = [
   {
@@ -279,14 +422,93 @@ export const ADVANCEMENT_NODES = [
     },
     unlocked: false,
   },
+
+  // Metal Corrosion branch (Eiffel Tower)
+  {
+    id: "fe_sulfuric",
+    title: "{{chemistry.advancements.fe_sulfuric.title}}",
+    subtitle: "Fe + H₂SO₄ ➔ FeSO₄ + H₂",
+    desc: "{{chemistry.advancements.fe_sulfuric.desc}}",
+    tier: "legendary",
+    icon: "🗼",
+    parent: "h2so4_master",
+    reaction: {
+      reactants: ["Fe", "H2SO4"],
+      product: "FeSO4",
+      equation: "Fe + H₂SO₄ ➔ FeSO₄ + H₂",
+    },
+    unlocked: false,
+  },
+  {
+    id: "fe_nitric",
+    title: "{{chemistry.advancements.fe_nitric.title}}",
+    subtitle: "Fe + 2HNO₃ ➔ Fe(NO₃)₂ + H₂",
+    desc: "{{chemistry.advancements.fe_nitric.desc}}",
+    tier: "legendary",
+    icon: "🧪",
+    parent: "hno3_master",
+    reaction: {
+      reactants: ["Fe", "HNO3"],
+      product: "Fe(NO3)2",
+      equation: "Fe + 2HNO₃ ➔ Fe(NO₃)₂ + H₂",
+    },
+    unlocked: false,
+  },
+  {
+    id: "fe_rust",
+    title: "{{chemistry.advancements.fe_rust.title}}",
+    subtitle: "4Fe + 3O₂ ➔ 2Fe₂O₃",
+    desc: "{{chemistry.advancements.fe_rust.desc}}",
+    tier: "rare",
+    icon: "🍂",
+    parent: "root_emissions",
+    reaction: {
+      reactants: ["Fe", "O2"],
+      product: "Fe2O3",
+      equation: "4Fe + 3O₂ ➔ 2Fe₂O₃",
+    },
+    unlocked: false,
+  },
+
+  // Stone Monument Dissolution branch (Moai Statue)
+  {
+    id: "caco3_sulfuric",
+    title: "{{chemistry.advancements.caco3_sulfuric.title}}",
+    subtitle: "CaCO₃ + H₂SO₄ ➔ CaSO₄ + H₂O + CO₂",
+    desc: "{{chemistry.advancements.caco3_sulfuric.desc}}",
+    tier: "legendary",
+    icon: "🗿",
+    parent: "h2so4_master",
+    reaction: {
+      reactants: ["CaCO3", "H2SO4"],
+      product: "CaSO4",
+      equation: "CaCO₃ + H₂SO₄ ➔ CaSO₄ + H₂O + CO₂",
+    },
+    unlocked: false,
+  },
+  {
+    id: "caco3_nitric",
+    title: "{{chemistry.advancements.caco3_nitric.title}}",
+    subtitle: "CaCO₃ + 2HNO₃ ➔ Ca(NO₃)₂ + H₂O + CO₂",
+    desc: "{{chemistry.advancements.caco3_nitric.desc}}",
+    tier: "legendary",
+    icon: "🏛️",
+    parent: "hno3_master",
+    reaction: {
+      reactants: ["CaCO3", "HNO3"],
+      product: "Ca(NO3)2",
+      equation: "CaCO₃ + 2HNO₃ ➔ Ca(NO₃)₂ + H₂O + CO₂",
+    },
+    unlocked: false,
+  },
 ];
 
 class GamifiedChemistryEngine {
   constructor() {
     this.advancements = JSON.parse(JSON.stringify(ADVANCEMENT_NODES));
-    this.unlockedMolecules = new Set(["SO2", "O2", "H2O", "NO"]);
+    this.unlockedMolecules = new Set(["SO2", "O2", "H2O", "NO", "Fe", "CaCO3"]);
     this.discoveryHistory = [];
-    this.failReason = "No spontaneous reaction between these molecules. Try combining an oxide with O₂ or H₂O!";
+    this.failReason = "No spontaneous reaction between these molecules. Try combining an acid with Fe or CaCO₃, or an oxide with O₂/H₂O!";
   }
 
   getAvailableMolecules() {
