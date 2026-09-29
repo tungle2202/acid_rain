@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Acid Rain",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.acidrain.app",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -33,6 +33,12 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "windows": {
+      "wix": {
+        "upgradeCode": "7837e58d-da12-5739-b951-d33a34f86b7f",
+        "language": "en-US"
+      }
+    },
     "android": {
       "debugApplicationIdSuffix": ".debug"
     }

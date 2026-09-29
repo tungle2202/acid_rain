@@ -1,0 +1,163 @@
+name: Release Build (MSI & Portable EXE)
+
+on:
+  push:
+    branches:
+      - 'release/v0.2.0'
+      - 'release/**'
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: 'Create draft release'
+        type: boolean
+        default: false
+      prerelease:
+        description: 'Create pre-release'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-release:
+    name: Build Windows MSI & Portable EXE
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Setup Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Ensure WiX Toolset is in PATH
+        shell: pwsh
+        run: |
+          if ($env:WIX) {
+            Write-Host "WiX Toolset detected at $env:WIX"
+            echo "$env:WIX\bin" >> $env:GITHUB_PATH
+          } else {
+            $wixDir = Get-ChildItem -Path "C:\Program Files (x86)\WiX Toolset*" -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($wixDir) {
+              Write-Host "WiX Toolset located at $($wixDir.FullName)"
+              echo "$($wixDir.FullName)\bin" >> $env:GITHUB_PATH
+            } else {
+              Write-Host "WiX directory not found in Program Files (x86); Tauri will automatically download WiX if needed."
+            }
+          }
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tauri Application (MSI & Binaries)
+        run: npm run tauri build -- --bundles msi
+
+      - name: Prepare Release Artifacts & Checksums
+        id: prepare_artifacts
+        shell: pwsh
+        run: |
+          $packageJson = Get-Content -Raw ./package.json | ConvertFrom-Json
+          $version = $packageJson.version
+          Write-Host "Target Version: $version"
+
+          $artifactsDir = "./artifacts"
+          New-Item -ItemType Directory -Force -Path $artifactsDir | Out-Null
+
+          # Copy MSI Wizard installer(s)
+          $msiFiles = Get-ChildItem -Path "src-tauri/target/release/bundle/msi/*.msi"
+          if ($msiFiles.Count -eq 0) {
+            throw "Error: No MSI installer found in src-tauri/target/release/bundle/msi/"
+          }
+          foreach ($msi in $msiFiles) {
+            Write-Host "Adding MSI Installer: $($msi.Name)"
+            Copy-Item -Path $msi.FullName -Destination "$artifactsDir/$($msi.Name)"
+          }
+
+          # Copy and rename portable standalone executable
+          $rawExe = "src-tauri/target/release/app.exe"
+          if (-not (Test-Path $rawExe)) {
+            throw "Error: Raw compiled binary not found at $rawExe"
+          }
+          $portableName = "Acid.Rain_${version}_x64_portable.exe"
+          Copy-Item -Path $rawExe -Destination "$artifactsDir/$portableName"
+          Write-Host "Adding Portable Executable: $portableName"
+
+          # Create ZIP bundle for portable executable
+          $portableZip = "Acid.Rain_${version}_x64_portable.zip"
+          Compress-Archive -Path "$artifactsDir/$portableName" -DestinationPath "$artifactsDir/$portableZip" -Force
+          Write-Host "Adding Portable ZIP: $portableZip"
+
+          # Calculate SHA-256 hashes
+          $checksumFile = "$artifactsDir/checksums.txt"
+          Set-Location $artifactsDir
+          Get-ChildItem -File | Where-Object { $_.Name -ne "checksums.txt" } | ForEach-Object {
+            $hash = (Get-FileHash -Path $_.FullName -Algorithm SHA256).Hash.ToLower()
+            "$hash  $($_.Name)" | Out-File -Append -Encoding utf8 -FilePath "checksums.txt"
+          }
+          Set-Location ..
+
+          Write-Host "Generated Checksums:"
+          Get-Content $checksumFile
+
+          # Determine Tag Name
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $tagName = "${{ github.ref_name }}"
+          } else {
+            $tagName = "v$version"
+          }
+
+          Write-Host "Release Tag: $tagName"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag_name=$tagName" >> $env:GITHUB_OUTPUT
+          "portable_exe=$portableName" >> $env:GITHUB_OUTPUT
+
+      - name: Upload Workflow Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: acid-rain-v${{ steps.prepare_artifacts.outputs.version }}-windows-x64
+          path: ./artifacts/*
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v3
+        if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/release/v0.2.0' || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ steps.prepare_artifacts.outputs.tag_name }}
+          name: Acid Rain ${{ steps.prepare_artifacts.outputs.tag_name }}
+          body: |
+            ## Acid Rain ${{ steps.prepare_artifacts.outputs.tag_name }} Release
+
+            ### Windows Packages (x64)
+            - **MSI Wizard Installer**: `Acid.Rain_${{ steps.prepare_artifacts.outputs.version }}_x64_en-US.msi`
+              - Full Windows Installer setup wizard with Desktop & Start Menu shortcuts and uninstaller.
+            - **Portable Executable**: `${{ steps.prepare_artifacts.outputs.portable_exe }}`
+              - Standalone executable. Run directly without installation.
+            - **Portable ZIP**: `Acid.Rain_${{ steps.prepare_artifacts.outputs.version }}_x64_portable.zip`
+              - Zipped archive containing the portable binary.
+            - **Integrity**: Refer to `checksums.txt` for SHA-256 checksums.
+
+            ---
+            *Automated build by GitHub Actions CI.*
+          files: ./artifacts/*
+          draft: ${{ inputs.draft || false }}
+          prerelease: ${{ inputs.prerelease || false }}
+          generate_release_notes: true

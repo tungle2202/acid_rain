@@ -218,15 +218,28 @@ cargo fmt --manifest-path src-tauri/Cargo.toml --check
 
 ---
 
-## 📦 Production Build
+## 📦 Production Build & Releases
 
-Bundle into an optimized, self-contained desktop executable:
+Bundle into an optimized, self-contained desktop package:
 
 ```bash
+# Full build
 npm run tauri build
+
+# Specific Windows bundle (WiX MSI Installer)
+npm run tauri build -- --bundles msi
 ```
 
-Bundled installers (`.deb`, `.AppImage` on Linux, `.msi` on Windows, `.dmg` on macOS) will be generated under `src-tauri/target/release/bundle/`.
+### Windows Release Formats
+- **MSI Wizard Installer (`.msi`)**: Full Windows Installer wizard built with WiX Toolset, featuring directory selection, Start Menu / Desktop shortcuts, and Windows uninstaller registration.
+- **Portable Executable (`.exe`)**: Single standalone binary with statically linked runtimes. Download and launch directly without installation.
+
+### 🚀 Automated GitHub CI/CD
+A GitHub Actions workflow is provided at `.github/workflows/release.yml`. Pushing to `release/v0.2.0`, creating a version tag (e.g. `v0.2.0`), or triggering manually via **Workflow Dispatch** will:
+1. Build the MSI installer using WiX Toolset on `windows-latest`.
+2. Package the portable standalone executable (`Acid.Rain_<version>_x64_portable.exe`) and ZIP archive.
+3. Compute SHA-256 checksums in `checksums.txt`.
+4. Automatically publish or update the GitHub Release with all binary assets attached.
 
 ---
 
