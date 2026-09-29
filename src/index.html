@@ -1,106 +1,106 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Acid Rain Environmental Simulation</title>
+    <title>Mô Phỏng Môi Trường Mưa Axit</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <div id="app">
-      <!-- Main Simulation Viewport -->
+      <!-- Vùng hiển thị mô phỏng chính -->
       <section class="simulation-container">
         <canvas id="sim-canvas"></canvas>
 
-        <!-- FPS / Shooting Game Style Reaction Kill-Feed (Top Right) -->
+        <!-- Bảng thông báo phản ứng phong cách game bắn súng (Góc trên bên phải) -->
         <div id="kill-feed" class="kill-feed-container"></div>
 
-        <!-- Quick Dock: Dedicated Tech Tree Button -->
+        <!-- Nút truy cập nhanh: Cây tiến trình Minecraft -->
         <div id="quick-dock-buttons" class="quick-dock-buttons">
-          <button id="open-tree-btn" class="dock-btn tree-dock-btn" title="View Minecraft-Style Reaction Tech Tree">
-            🏆 <span>Advancement Tree</span>
+          <button id="open-tree-btn" class="dock-btn tree-dock-btn" title="Xem Cây Phản Ứng Dạng Minecraft">
+            🏆 <span>Cây Tiến Trình</span>
           </button>
         </div>
 
-        <!-- TOP RESEARCH BAR (Visible when zoomed into smoke) -->
+        <!-- THANH CÔNG CỤ NGHIÊN CỨU (Hiển thị khi phóng to vào làn khói) -->
         <div id="research-top-bar" class="research-top-bar hidden">
           <div class="rt-left">
-            <button id="back-to-env-btn" class="rt-back-btn" title="Return to Landscape (Esc)">
-              ⬅ Return to Environment <span class="kbd">Esc</span>
+            <button id="back-to-env-btn" class="rt-back-btn" title="Quay Lại Môi Trường (Esc)">
+              ⬅ Quay Lại Môi Trường <span class="kbd">Esc</span>
             </button>
             <div class="rt-title-group">
               <span class="pulse-dot"></span>
-              <span class="rt-title">Atmospheric Chemistry</span>
+              <span class="rt-title">Hóa Học Khí Quyển</span>
             </div>
           </div>
           <div class="rt-spawners">
-            <span class="spawner-label">Add Molecule:</span>
+            <span class="spawner-label">Thêm Phân Tử:</span>
             <button class="spawn-btn" data-type="SO2">SO₂</button>
             <button class="spawn-btn" data-type="O2">O₂</button>
             <button class="spawn-btn" data-type="H2O">H₂O</button>
             <button class="spawn-btn" data-type="NO">NO</button>
-            <button id="reset-molecules-btn" class="spawn-btn danger">Reset Field</button>
+            <button id="reset-molecules-btn" class="spawn-btn danger">Đặt Lại</button>
           </div>
         </div>
 
-        <!-- FACTORY PRODUCTIVITY CONTROLLER (Left Panel, Shown ONLY when Factory is focused) -->
+        <!-- BẢNG ĐIỀU KHIỂN NĂNG SUẤT NHÀ MÁY (Bảng bên trái, chỉ hiện khi chọn nhà máy) -->
         <aside id="factory-panel" class="factory-drawer hidden">
           <div class="drawer-header">
             <div class="drawer-title-group">
               <span class="icon">🏭</span>
               <div>
-                <h2>Coal Power Plant</h2>
-                <span class="sub-label">Industrial Emission Station</span>
+                <h2>Nhà Máy Nhiệt Điện Than</h2>
+                <span class="sub-label">Trạm Phát Thải Công Nghiệp</span>
               </div>
             </div>
-            <button id="close-factory-btn" class="close-btn" title="Close Panel (Esc)">✕</button>
+            <button id="close-factory-btn" class="close-btn" title="Đóng Bảng (Esc)">✕</button>
           </div>
 
           <div class="drawer-content">
             <div class="control-card">
               <div class="card-header-row">
-                <label for="factory-productivity">Work Productivity</label>
+                <label for="factory-productivity">Năng Suất Hoạt Động</label>
                 <span id="productivity-val" class="highlight-val">70%</span>
               </div>
               <input type="range" id="factory-productivity" min="10" max="100" value="70" />
               <div class="productivity-markers">
-                <span>10% Idle</span>
+                <span>10% Nghỉ</span>
                 <span>50%</span>
-                <span>100% Max</span>
+                <span>100% Tối Đa</span>
               </div>
             </div>
 
-            <!-- Quick Presets -->
+            <!-- Thiết lập nhanh -->
             <div class="presets-row">
-              <button class="preset-btn" data-val="25">Eco (25%)</button>
-              <button class="preset-btn" data-val="60">Standard (60%)</button>
-              <button class="preset-btn danger" data-val="100">Overdrive (100%)</button>
+              <button class="preset-btn" data-val="25">Tiết Kiệm (25%)</button>
+              <button class="preset-btn" data-val="60">Tiêu Chuẩn (60%)</button>
+              <button class="preset-btn danger" data-val="100">Quá Tải (100%)</button>
             </div>
 
-            <!-- Real-time Stack Emission Indicators -->
+            <!-- Chỉ số phát thải ống khói thời gian thực -->
             <div class="metrics-block">
-              <h3>Real-Time Stack Emissions</h3>
+              <h3>Chỉ Số Phát Thải Thời Gian Thực</h3>
               <div class="metric-row">
-                <span class="label">Smoke Density:</span>
-                <span id="smoke-density-text" class="val text-danger">Dense Black Soot</span>
+                <span class="label">Mật Độ Khói:</span>
+                <span id="smoke-density-text" class="val text-danger">Muội Than Đen Đặc</span>
               </div>
               <div class="metric-row">
-                <span class="label">SO₂ Output Rate:</span>
+                <span class="label">Tốc Độ Thải SO₂:</span>
                 <span id="so2-rate-text" class="val">140 kg/h</span>
               </div>
               <div class="metric-row">
-                <span class="label">NOₓ Output Rate:</span>
+                <span class="label">Tốc Độ Thải NOₓ:</span>
                 <span id="nox-rate-text" class="val">95 kg/h</span>
               </div>
               <div class="metric-row">
-                <span class="label">Thermal Output:</span>
+                <span class="label">Công Suất Nhiệt:</span>
                 <span id="thermal-val" class="val">860 MW</span>
               </div>
             </div>
           </div>
         </aside>
 
-        <!-- MINECRAFT-STYLE ADVANCEMENTS MODAL / DRAWER -->
+        <!-- BẢNG CÂY TIẾN TRÌNH DẠNG MINECRAFT -->
         <div id="tree-modal" class="tree-modal hidden">
           <div class="tree-modal-backdrop" id="tree-backdrop"></div>
           <div class="tree-modal-container">
@@ -109,81 +109,81 @@
                 <div class="mc-header-row">
                   <div class="mc-title-group">
                     <span class="mc-icon">🏆</span>
-                    <span class="mc-title">TROPOSPHERIC TECH TREE</span>
+                    <span class="mc-title">CÂY CÔNG NGHỆ KHÍ QUYỂN</span>
                   </div>
                   <div class="mc-header-right">
-                    <span id="mc-xp-level" class="mc-xp-level">LVL 0</span>
-                    <button id="close-tree-btn" class="mc-close-btn" title="Close (Esc)">✕</button>
+                    <span id="mc-xp-level" class="mc-xp-level">CẤP 0</span>
+                    <button id="close-tree-btn" class="mc-close-btn" title="Đóng (Esc)">✕</button>
                   </div>
                 </div>
                 <div class="mc-xp-bar-container">
                   <div id="mc-xp-fill" class="mc-xp-fill" style="width: 0%"></div>
-                  <span id="mc-xp-text" class="mc-xp-text">0 / 5 Advancements (0%)</span>
+                  <span id="mc-xp-text" class="mc-xp-text">0 / 5 Tiến Trình (0%)</span>
                 </div>
               </div>
 
-              <!-- Interactive Advancement Tree Grid -->
+              <!-- Lưới cây tiến trình tương tác -->
               <div class="mc-tree-canvas" id="mc-tree-grid">
-                <!-- Populated dynamically via JS -->
+                <!-- Được tạo động qua JS -->
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Right: Control Panel Sidebar -->
+      <!-- Bên phải: Bảng điều khiển phụ -->
       <aside class="control-panel">
         <header class="panel-header">
-          <h1>Acid Rain Sim</h1>
+          <h1>Mô Phỏng Mưa Axit</h1>
           <span class="badge">v0.1.0</span>
         </header>
 
         <div class="panel-section">
-          <h2>Simulation Status</h2>
+          <h2>Trạng Thái Mô Phỏng</h2>
           <div class="status-item">
             <span class="status-dot online"></span>
-            <span id="status-text">Atmosphere Active (60 FPS)</span>
+            <span id="status-text">Khí Quyển Đang Chạy (60 FPS)</span>
           </div>
         </div>
 
         <div class="panel-section">
-          <h2>Environment Controls</h2>
+          <h2>Điều Khiển Môi Trường</h2>
           <div class="control-group">
-            <label for="rain-intensity">Rainfall Intensity</label>
+            <label for="rain-intensity">Cường Độ Lượng Mưa</label>
             <input type="range" id="rain-intensity" min="0" max="100" value="50" />
           </div>
           <div class="control-group">
-            <label for="so2-emissions">SO₂ Emissions</label>
+            <label for="so2-emissions">Lượng Khí Thải SO₂</label>
             <input type="range" id="so2-emissions" min="0" max="100" value="70" />
           </div>
           <div class="control-group">
-            <label for="nox-emissions">NOₓ Emissions</label>
+            <label for="nox-emissions">Lượng Khí Thải NOₓ</label>
             <input type="range" id="nox-emissions" min="0" max="100" value="60" />
           </div>
         </div>
 
         <div class="panel-section">
-          <h2>Ecological Indicators</h2>
+          <h2>Chỉ Số Sinh Thái</h2>
           <div class="metrics-grid">
             <div class="metric-card">
-              <span class="metric-label">Precipitation pH</span>
+              <span class="metric-label">pH Nước Mưa</span>
               <span class="metric-value danger-text" id="ph-metric">4.2</span>
-              <span class="metric-status text-danger" id="ph-status">Acid Rain</span>
+              <span class="metric-status text-danger" id="ph-status">Mưa Axit</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Lake Acidity</span>
+              <span class="metric-label">Độ Axit Của Hồ</span>
               <span class="metric-value" id="lake-metric">5.4</span>
-              <span class="metric-status" id="lake-status">Fish At Risk</span>
+              <span class="metric-status" id="lake-status">Cá Gặp Nguy Hiểm</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Soil Quality</span>
+              <span class="metric-label">Chất Lượng Đất</span>
               <span class="metric-value" id="soil-metric">6.1</span>
-              <span class="metric-status" id="soil-status">Nutrient Leaching</span>
+              <span class="metric-status" id="soil-status">Rửa Trôi Dinh Dưỡng</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Foliage Health</span>
+              <span class="metric-label">Sức Sống Của Cây</span>
               <span class="metric-value" id="tree-metric">78%</span>
-              <span class="metric-status" id="tree-status">Chlorosis Stress</span>
+              <span class="metric-status" id="tree-status">Ức Chế Diệp Lục</span>
             </div>
           </div>
         </div>

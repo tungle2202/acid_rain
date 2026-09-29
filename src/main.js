@@ -164,13 +164,13 @@ function updateEcologyMetrics() {
   if (phEl) phEl.textContent = rPh;
   if (phStatus) {
     if (state.rainPh < 4.1) {
-      phStatus.textContent = "Acid Apocalypse (Trees Dying)";
+      phStatus.textContent = "Thảm Họa Axit (Chết cây)";
       phStatus.className = "metric-status danger-text";
     } else if (state.rainPh < 5.0) {
-      phStatus.textContent = "Severe Acid Rain";
+      phStatus.textContent = "Mưa Axit Nghiêm Trọng";
       phStatus.className = "metric-status danger-text";
     } else {
-      phStatus.textContent = "Normal / Clean";
+      phStatus.textContent = "Bình Thường / Trong Lành";
       phStatus.className = "metric-status";
     }
   }
@@ -180,13 +180,13 @@ function updateEcologyMetrics() {
   if (lakeEl) lakeEl.textContent = lPh;
   if (lakeStatus) {
     if (state.lakePh < 4.8) {
-      lakeStatus.textContent = "Fish Mortality (Dead Skeletons)";
+      lakeStatus.textContent = "Cá Chết Hàng Loạt";
       lakeStatus.className = "metric-status danger-text";
     } else if (state.lakePh < 5.8) {
-      lakeStatus.textContent = "Acid Stress (Low Population)";
+      lakeStatus.textContent = "Stress Axit (Suy Giảm Số Lượng)";
       lakeStatus.className = "metric-status text-danger";
     } else {
-      lakeStatus.textContent = "Thriving Habitat";
+      lakeStatus.textContent = "Môi Trường Lý Tưởng";
       lakeStatus.className = "metric-status";
     }
   }
@@ -197,7 +197,7 @@ function updateEcologyMetrics() {
     const health = state.rainPh < 4.1 ? 0 : Math.max(25, Math.floor(100 - (emissionSum / 100) * 55));
     treeEl.textContent = `${health}%`;
     if (treeStatus) {
-      treeStatus.textContent = state.rainPh < 4.1 ? "Defoliated & Dead" : state.rainPh < 5.0 ? "Chlorosis Stress" : "Healthy Foliage";
+      treeStatus.textContent = state.rainPh < 4.1 ? "Rụng Lá & Chết Khô" : state.rainPh < 5.0 ? "Ức Chế Diệp Lục" : "Tươi Tốt Khỏe Mạnh";
       treeStatus.className = state.rainPh < 4.1 ? "metric-status danger-text" : "metric-status";
     }
   }
@@ -654,7 +654,7 @@ function triggerKillFeed(result) {
       <span class="kf-reactants">${result.advancement.reaction.reactants.join(" + ")}</span>
       <span class="kf-symbol">⚡➔</span>
       <span class="kf-product">${result.product}</span>
-      <span class="kf-tag ${isAcid ? "acid" : ""}">${isAcid ? "ACID FORMED" : "OXIDIZED"}</span>
+      <span class="kf-tag ${isAcid ? "acid" : ""}">${isAcid ? "TẠO THÀNH AXIT" : "ĐÃ OXI HÓA"}</span>
     </div>
     <div class="kf-title">${result.advancement.title} (${result.advancement.reaction.equation})</div>
   `;
@@ -767,13 +767,13 @@ function updateProductivity(val) {
 
   if (smokeDensityText) {
     if (state.productivity < 35) {
-      smokeDensityText.textContent = "Light Gray Vapor";
+      smokeDensityText.textContent = "Hơi Xám Nhạt";
       smokeDensityText.className = "val";
     } else if (state.productivity < 70) {
-      smokeDensityText.textContent = "Moderate Smog";
+      smokeDensityText.textContent = "Khói Mù Vừa Phải";
       smokeDensityText.className = "val";
     } else {
-      smokeDensityText.textContent = "Dense Pitch-Black Soot";
+      smokeDensityText.textContent = "Muội Than Đen Đặc";
       smokeDensityText.className = "val text-danger";
     }
   }
@@ -841,9 +841,9 @@ function renderAdvancementTree() {
   const nodes = chemistryEngine.advancements;
   const progress = chemistryEngine.getProgress();
 
-  if (mcXpLevel) mcXpLevel.textContent = `LVL ${progress.completed}`;
+  if (mcXpLevel) mcXpLevel.textContent = `CẤP ${progress.completed}`;
   if (mcXpFill) mcXpFill.style.width = `${progress.percent}%`;
-  if (mcXpText) mcXpText.textContent = `${progress.completed} / ${progress.total} Advancements (${progress.percent}%)`;
+  if (mcXpText) mcXpText.textContent = `${progress.completed} / ${progress.total} Tiến Trình (${progress.percent}%)`;
 
   for (const n of nodes) {
     const isUnlocked = n.unlocked;
@@ -857,10 +857,10 @@ function renderAdvancementTree() {
       <div class="mc-node-info">
         <div class="mc-node-header">
           <span class="mc-node-title">${n.title}</span>
-          <span class="mc-badge ${isUnlocked ? "done" : "lock"}">${isUnlocked ? "DONE" : "LOCKED"}</span>
+          <span class="mc-badge ${isUnlocked ? "done" : "lock"}">${isUnlocked ? "HOÀN THÀNH" : "CHƯA MỞ"}</span>
         </div>
         <span class="mc-node-sub">${n.subtitle}</span>
-        <p class="mc-node-desc">${isUnlocked ? n.desc : "??? Hidden reaction chain. Drag molecules in smoke POV to discover!"}</p>
+        <p class="mc-node-desc">${isUnlocked ? n.desc : "??? Chuỗi phản ứng ẩn. Kéo thả phân tử trong làn khói để khám phá!"}</p>
       </div>
     `;
 

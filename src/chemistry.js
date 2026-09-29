@@ -10,10 +10,10 @@ export const MOLECULES = {
   SO2: {
     id: "SO2",
     formula: "SO₂",
-    name: "Sulfur Dioxide",
+    name: "Lưu huỳnh Đioxit",
     color: "#f59e0b",
     type: "pollutant",
-    desc: "Toxic choking gas from coal combustion and volcanic eruptions.",
+    desc: "Khí độc gây ngạt sinh ra từ quá trình đốt than và núi lửa phun trào.",
     // Bent geometry: S at origin, 2 O at ~119°
     atoms: [
       { x: 0, y: -6, symbol: "S", color: "#f59e0b", r: 16 },
@@ -28,10 +28,10 @@ export const MOLECULES = {
   O2: {
     id: "O2",
     formula: "O₂",
-    name: "Atmospheric Oxygen",
+    name: "Oxi Khí Quyển",
     color: "#38bdf8",
     type: "atmospheric",
-    desc: "Essential gas that photochemically oxidizes pollutants into acids.",
+    desc: "Khí thiết yếu tham gia oxi hóa quang hóa các chất ô nhiễm thành axit.",
     // Linear diatomic: 2 O atoms
     atoms: [
       { x: -14, y: 0, symbol: "O", color: "#38bdf8", r: 13 },
@@ -42,10 +42,10 @@ export const MOLECULES = {
   H2O: {
     id: "H2O",
     formula: "H₂O",
-    name: "Water Vapor",
+    name: "Hơi Nước",
     color: "#60a5fa",
     type: "atmospheric",
-    desc: "Atmospheric humidity that hydrates airborne oxides into liquid acids.",
+    desc: "Độ ẩm khí quyển hydrat hóa các oxit lơ lửng thành giọt axit lỏng.",
     // Bent geometry: O at origin, 2 H at ~104.5°
     atoms: [
       { x: 0, y: -5, symbol: "O", color: "#3b82f6", r: 14 },
@@ -60,10 +60,10 @@ export const MOLECULES = {
   SO3: {
     id: "SO3",
     formula: "SO₃",
-    name: "Sulfur Trioxide",
+    name: "Lưu huỳnh Trioxit",
     color: "#fb923c",
     type: "intermediate",
-    desc: "Aggressive anhydride intermediate; instantaneously reacts with cloud moisture.",
+    desc: "Chất trung gian anhydrit hoạt tính cực cao; phản ứng tức thì với hơi ẩm đám mây.",
     // Trigonal planar: 3 O atoms around central S at 120°
     atoms: [
       { x: 0, y: 0, symbol: "S", color: "#f59e0b", r: 16 },
@@ -80,10 +80,10 @@ export const MOLECULES = {
   NO: {
     id: "NO",
     formula: "NO",
-    name: "Nitric Oxide",
+    name: "Nitơ Monoxit",
     color: "#a78bfa",
     type: "pollutant",
-    desc: "Primary nitrogen oxide generated from lightning, furnaces, and volcanic heat.",
+    desc: "Oxit nitơ sơ cấp sinh ra từ sấm sét, lò đốt công nghiệp và nhiệt độ núi lửa.",
     // Diatomic: N - O
     atoms: [
       { x: -13, y: 0, symbol: "N", color: "#8b5cf6", r: 13 },
@@ -94,10 +94,10 @@ export const MOLECULES = {
   NO2: {
     id: "NO2",
     formula: "NO₂",
-    name: "Nitrogen Dioxide",
+    name: "Nitơ Đioxit",
     color: "#f43f5e",
     type: "intermediate",
-    desc: "Pungent reddish-brown gas creating heavy urban and volcanic smog.",
+    desc: "Khí màu nâu đỏ có mùi hắc đặc trưng, tác nhân chính gây khói mù đô thị và núi lửa.",
     // Bent geometry: N with 2 O
     atoms: [
       { x: 0, y: -6, symbol: "N", color: "#8b5cf6", r: 14 },
@@ -112,12 +112,12 @@ export const MOLECULES = {
   H2SO4: {
     id: "H2SO4",
     formula: "H₂SO₄",
-    name: "Sulfuric Acid",
+    name: "Axit Sunfuric",
     color: "#ef4444",
     type: "acid",
     pH: "2.8",
     tier: "legendary",
-    desc: "King of Acids. Highly corrosive strong mineral acid that decimates aquatic and forest ecosystems.",
+    desc: "Vua của các loại axit. Axit vô cơ cực mạnh ăn mòn tàn phá hệ sinh thái thủy sinh và rừng cây.",
     atoms: [
       { x: 0, y: 0, symbol: "S", color: "#f59e0b", r: 16 },
       { x: 0, y: -24, symbol: "O", color: "#ef4444", r: 12 },
@@ -139,12 +139,12 @@ export const MOLECULES = {
   HNO3: {
     id: "HNO3",
     formula: "HNO₃",
-    name: "Nitric Acid",
+    name: "Axit Nitric",
     color: "#ec4899",
     type: "acid",
     pH: "3.2",
     tier: "legendary",
-    desc: "Corrosive acid that strips tree leaves of magnesium and calcium, poisoning soil.",
+    desc: "Axit ăn mòn mạnh làm rửa trôi magiê và canxi khỏi lá cây, gây nhiễm độc thổ nhưỡng.",
     atoms: [
       { x: 0, y: 0, symbol: "N", color: "#8b5cf6", r: 14 },
       { x: 0, y: -22, symbol: "O", color: "#ef4444", r: 12 },
@@ -162,12 +162,12 @@ export const MOLECULES = {
   H2SO3: {
     id: "H2SO3",
     formula: "H₂SO₃",
-    name: "Sulfurous Acid",
+    name: "Axit Sunfurơ",
     color: "#eab308",
     type: "acid",
     pH: "4.2",
     tier: "rare",
-    desc: "Direct dissolution product of raw sulfur smoke into falling rainwater droplets.",
+    desc: "Sản phẩm hòa tan trực tiếp của khí lưu huỳnh thô vào các giọt nước mưa rơi xuống.",
     atoms: [
       { x: 0, y: -6, symbol: "S", color: "#f59e0b", r: 15 },
       { x: 0, y: 18, symbol: "O", color: "#ef4444", r: 12 },
@@ -192,9 +192,9 @@ export const MOLECULES = {
 export const ADVANCEMENT_NODES = [
   {
     id: "root_emissions",
-    title: "Heavy Emitters",
-    subtitle: "Root of Pollution",
-    desc: "Coal plants & volcanoes expel massive volumes of SO₂ and NO into the sky.",
+    title: "Nguồn Phát Thải Nặng",
+    subtitle: "Cội Nguồn Ô Nhiễm",
+    desc: "Nhà máy nhiệt điện than và núi lửa xả lượng khổng lồ khí SO₂ và NO vào bầu trời.",
     tier: "root",
     icon: "🌋",
     parent: null,
@@ -203,9 +203,9 @@ export const ADVANCEMENT_NODES = [
   // Sulfur branch
   {
     id: "so3_oxidation",
-    title: "Airborne Oxidation",
+    title: "Oxi Hóa Trong Không Khí",
     subtitle: "2SO₂ + O₂ ➔ 2SO₃",
-    desc: "Oxidize sulfur dioxide in the atmosphere to produce reactive sulfur trioxide.",
+    desc: "Oxi hóa lưu huỳnh đioxit trong khí quyển để tạo thành lưu huỳnh trioxit hoạt tính cao.",
     tier: "rare",
     icon: "🔥",
     parent: "root_emissions",
@@ -218,9 +218,9 @@ export const ADVANCEMENT_NODES = [
   },
   {
     id: "h2so3_formation",
-    title: "Sulfurous Shower",
+    title: "Cơn Mưa Sunfurơ",
     subtitle: "SO₂ + H₂O ➔ H₂SO₃",
-    desc: "Raw sulfur fumes dissolve directly into raindrops, starting initial acid damage.",
+    desc: "Khói lưu huỳnh thô hòa tan trực tiếp vào hạt mưa, khởi phát tác hại axit ban đầu.",
     tier: "rare",
     icon: "🌧️",
     parent: "root_emissions",
@@ -233,9 +233,9 @@ export const ADVANCEMENT_NODES = [
   },
   {
     id: "h2so4_master",
-    title: "King of Corrosion (H₂SO₄)",
+    title: "Vua Ăn Mòn (H₂SO₄)",
     subtitle: "SO₃ + H₂O ➔ H₂SO₄",
-    desc: "Synthesize Sulfuric Acid! The paramount agent of severe environmental acid rain.",
+    desc: "Tổng hợp thành công Axit Sunfuric! Tác nhân hủy diệt hàng đầu trong hiện tượng mưa axit nghiêm trọng.",
     tier: "legendary",
     icon: "💀",
     parent: "so3_oxidation",
@@ -249,9 +249,9 @@ export const ADVANCEMENT_NODES = [
   // Nitrogen branch
   {
     id: "no2_oxidation",
-    title: "Brown Smog Bloom",
+    title: "Bùng Phát Khói Nâu",
     subtitle: "2NO + O₂ ➔ 2NO₂",
-    desc: "Nitric oxide oxidizes rapidly in fresh air, generating reddish nitrogen dioxide smog.",
+    desc: "Nitơ monoxit nhanh chóng bị oxi hóa trong không khí, tạo ra khói mù nitơ đioxit màu nâu đỏ.",
     tier: "rare",
     icon: "💨",
     parent: "root_emissions",
@@ -264,9 +264,9 @@ export const ADVANCEMENT_NODES = [
   },
   {
     id: "hno3_master",
-    title: "Nitric Catastrophe (HNO₃)",
+    title: "Thảm Họa Axit Nitric (HNO₃)",
     subtitle: "3NO₂ + H₂O ➔ 2HNO₃ + NO",
-    desc: "Synthesize Nitric Acid! Toxic nitrate deluge that dissolves soil nutrients and fish gills.",
+    desc: "Tổng hợp thành công Axit Nitric! Cơn mưa nitrat độc hại hòa tan chất dinh dưỡng trong đất và làm hỏng mang cá.",
     tier: "legendary",
     icon: "⚡",
     parent: "no2_oxidation",
@@ -324,7 +324,7 @@ class GamifiedChemistryEngine {
 
     return {
       success: false,
-      reason: "No spontaneous reaction between these molecules. Try combining an oxide with O₂ or H₂O!",
+      reason: "Không có phản ứng tự phát giữa các phân tử này. Hãy thử kết hợp một oxit với O₂ hoặc H₂O!",
     };
   }
 
