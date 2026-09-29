@@ -10,11 +10,14 @@ An interactive, gamified environmental simulation software exploring the photoch
 
 Designed for zero-configuration, single-executable deployment on Linux, Windows (x86_64), and macOS (Apple Silicon).
 
+AI vibe-coded projects for education purposes.
+
 ---
 
 ## 🌟 Key Features
 
 ### 1. Dynamic Macroscopic Ecosystem
+
 - **Industrial Factory & Natural Volcano**:
   - **Coal-Fired Power Plant:** Interactive facility on the left. Click to focus and adjust industrial productivity from 10% (idle) to 100% (overload), dynamically scaling $\text{SO}_2$ and $\text{NO}_x$ emission rates, thermal output, and chimney soot opacity.
   - **Volcanic Eruption:** Click the volcano on the far left to trigger an explosive eruption complete with incandescent magma sparks, seismic plumes, and atmospheric emission spikes.
@@ -25,12 +28,14 @@ Designed for zero-configuration, single-executable deployment on Linux, Windows 
   - **Forest & Soil Health:** Woodland trees dynamically reflect rainfall pH—from vibrant green canopies to chlorosis stress, down to defoliated dead timber.
 
 ### 2. Microscopic Atmospheric Chemistry Playground
+
 - **POV Camera Zoom:** Click directly into the rising smoke plume to transition into high-magnification research mode.
 - **Ball-and-Stick Geometric Molecules:** Stationary 2D molecular structures with realistic bonding geometry ($\text{SO}_2$, $\text{O}_2$, $\text{H}_2\text{O}$, $\text{NO}$, $\text{SO}_3$, $\text{NO}_2$, $\text{H}_2\text{SO}_4$, $\text{HNO}_3$, $\text{H}_2\text{SO}_3$).
 - **Drag-and-Drop Reactions:** Drag atmospheric oxidants ($\text{O}_2$, $\text{H}_2\text{O}$) into sulfur or nitrogen oxides to trigger spontaneous chemical syntheses accompanied by radial particle bursts.
 - **Infinite Reagent Regeneration:** Atmospheric $\text{O}_2$ and humidity ($\text{H}_2\text{O}$) automatically replenish into free space, facilitating continuous discovery.
 
 ### 3. Gamification Systems
+
 - **Shooter-Style "Kill Feed":** Real-time synthesis banner in the top-right corner celebrating discovered reactions with distinctive tags (`OXIDIZED`, `ACID FORMED`) and animated fade-outs.
 - **Minecraft-Inspired Advancement Tree:**
   - Full-screen modal tracking chemical synthesis progression.
@@ -96,10 +101,12 @@ acid_rain/
 ## 🌐 Languages & Localization
 
 This repository provides full bilingual support:
+
 - **`main` Branch:** English (US) interface, chemical terminology, and advancement text.
 - **`language/vietnamese` Branch:** Full Vietnamese (*Tiếng Việt*) translation across UI drawers, metrics, chemical descriptions, and Minecraft advancement nodes.
 
 To switch to Vietnamese:
+
 ```bash
 git checkout language/vietnamese
 ```
@@ -113,10 +120,13 @@ git checkout language/vietnamese
 - **Node.js:** v18.0.0 or higher ([Download](https://nodejs.org/))
 - **Rust & Cargo:** v1.80.0 or higher ([rustup.rs](https://rustup.rs/))
 - **Tauri CLI:**
+
   ```bash
   cargo install tauri-cli --version "^2.0.0"
   ```
+
 - **OS Dependencies (Linux only):**
+
   ```bash
   sudo apt-get update && sudo apt-get install -y \
     libwebkit2gtk-4.1-dev \
@@ -133,23 +143,28 @@ git checkout language/vietnamese
 ### Installation & Development
 
 1. **Clone the repository:**
+
    ```bash
-   git clone https://github.com/your-username/acid_rain.git
+   https://github.com/tungle2202/acid_rain
    cd acid_rain
    ```
 
 2. **Install frontend packages:**
+
    ```bash
    npm install
    ```
 
 3. **Run in Tauri Development Mode:**
+
    ```bash
    npm run tauri dev
    ```
+
    *This starts the Vite local server and launches the native Tauri desktop window.*
 
 4. **Run Web-Only Preview (Browser Canvas):**
+
    ```bash
    npm run dev
    ```
