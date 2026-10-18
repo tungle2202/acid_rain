@@ -1,5 +1,7 @@
 # 🌧️ Acid Rain Environmental Simulation
 
+> Caution: This project is AI-slop, don't take it serious
+
 [![Rust](https://img.shields.io/badge/rust-2024%2B-orange.svg?logo=rust)](https://www.rust-lang.org/)
 [![Tauri v2](https://img.shields.io/badge/tauri-v2.0-blue.svg?logo=tauri)](https://tauri.app/)
 [![Vite](https://img.shields.io/badge/vite-6.x-646CFF.svg?logo=vite)](https://vitejs.dev/)
